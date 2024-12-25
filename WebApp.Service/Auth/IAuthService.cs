@@ -4,6 +4,7 @@ namespace WebApp.Service.Auth
 {
     public interface IAuthService
     {
-        Task<bool> SignUpUserAsync(SignUpRequestModel model);
+        Task<bool> SignUpUser(SignUpRequestModel model);
+        Task<string> Login(LoginRequestModel model);
     }
 }

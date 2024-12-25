@@ -1,8 +1,10 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Data;
 using WebApp.Data.Entity;
 using WebApp.Data.SeedData;
+using WebApp.Service.Auth;
 
 namespace WebApp.Server
 {
@@ -56,9 +58,12 @@ namespace WebApp.Server
             ).AddEntityFrameworkStores<WebAppDbContext>()
             .AddDefaultTokenProviders();
 
-            //Initialize configuration
-            
+            builder.Logging.ClearProviders();
+            builder.Logging.AddConsole();
+            builder.Logging.AddDebug();
 
+            //Initialize configuration
+            builder.Services.AddTransient<IAuthService, AuthService>();
 
 
             builder.Services.AddControllers();
@@ -66,6 +71,9 @@ namespace WebApp.Server
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             var app = builder.Build();
             var seeder = new Seeder(app);
 

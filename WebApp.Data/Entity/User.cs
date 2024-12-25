@@ -11,6 +11,8 @@ namespace WebApp.Data.Entity
         public DateTime? LastLogin { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }
+        public string Gender { get; set; } = string.Empty;
         public int LoginCount { get; set; }
+        public long Phone { get; set; }
     }
 }
