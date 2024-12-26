@@ -1,15 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import { AuthService } from 'src/app/services/auth.service';
+import { MessageService } from 'primeng/api';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
-  styleUrls: ['./signup.component.css']
+  styleUrls: ['./signup.component.css'],
+  providers:[MessageService]
 })
-export class SignupComponent {
+export class SignupComponent implements OnInit{
   signupForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+     private authService: AuthService,
+     private messageService : MessageService,
+     private router : Router
+  ) {
     this.signupForm = this.fb.group(
       {
         email: ['', [Validators.required, Validators.email]],
@@ -18,7 +25,7 @@ export class SignupComponent {
         firstName: ['', Validators.required],
         lastName: ['', Validators.required],
         gender: ['', Validators.required],
-        mobile: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+        phone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
         address: ['', Validators.required],
       },
       { validators: this.passwordMatchValidator }
@@ -33,7 +40,30 @@ export class SignupComponent {
 
   onSubmit() {
     if (this.signupForm.valid) {
-      console.log('Form Submitted:', this.signupForm.value);
+      this.authService.signup(this.signupForm.value).subscribe({
+        next: async (response) => {
+          console.log(response);
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'User registered successfully.'});
+            //Delay navigation by 1 second (1000ms)
+            await new Promise<void>(resolve => setTimeout(resolve, 2000));
+           this.router.navigate(['']);
+
+        },
+        error: (err) => {
+          debugger
+          console.log(err);
+          this.messageService.add({ severity: 'error', summary: 'Success', detail: 'err.message' });
+        }
+      });
+    }
+
+    else {
+      console.log('Form is invalid:', this.signupForm);
     }
   }
+
+  ngOnInit(): void {
+  
+  }
+
 }

@@ -1,12 +1,17 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Text;
 using WebApp.Data;
 using WebApp.Data.Entity;
 using WebApp.Data.SeedData;
 using WebApp.Service.Auth;
 
-namespace WebApp.Server
+
+namespace GymEats.Api
 {
     public class Program
     {
@@ -32,7 +37,8 @@ namespace WebApp.Server
             {
                 opt.AddPolicy("EnableCORS", builder =>
                 {
-                    builder.AllowAnyOrigin()
+
+                 builder.AllowAnyOrigin()
                 .AllowAnyHeader()
                 .AllowAnyMethod();
 
@@ -62,41 +68,84 @@ namespace WebApp.Server
             builder.Logging.AddConsole();
             builder.Logging.AddDebug();
 
-            //Initialize configuration
             builder.Services.AddTransient<IAuthService, AuthService>();
+            
 
+            builder.Services.AddOptions();
+            builder.Services.AddHttpClient();
 
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            //Add services for jwt
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = configuration["Jwt:Issuer"],
+                    ValidAudience = configuration["Jwt:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
+                };
+
+            });
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Webapp", Version = "v1" });
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please enter token",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    BearerFormat = "JWT",
+                    Scheme = "bearer"
+                });
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement {
+                {
+                    new OpenApiSecurityScheme {
+                    Reference = new OpenApiReference {
+                        Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                    }
+                },
+                new string[] {}
+        }
+    });
+            });
+
 
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             var app = builder.Build();
+
+
             var seeder = new Seeder(app);
-
-            app.UseDefaultFiles();
-            app.UseStaticFiles();
-
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
+            //if (app.Environment.IsDevelopment())
+            //{
+            //    app.UseSwagger();
+            //    app.UseSwaggerUI();
+            //}
+            app.UseSwagger();
+            app.UseSwaggerUI();
+            app.UseCors("EnableCORS");
             app.UseHttpsRedirection();
-
+            app.UseStaticFiles();
+            app.UseAuthentication();
             app.UseAuthorization();
-
-
             app.MapControllers();
-
-            app.MapFallbackToFile("/index.html");
-
+           
             app.Run();
+
         }
         public class Seeder
         {
@@ -110,4 +159,5 @@ namespace WebApp.Server
             }
         }
     }
+
 }

@@ -10,12 +10,13 @@ import { SignupComponent } from 'src/app/components/signup/signup.component';
   declarations: [],
   imports: [
     CommonModule,
+
     RouterModule.forChild([
       
       {path:'',component:LoginComponent},
 
-      {path:'signup',component:SignupComponent}
-
+      {path:'signup',component:SignupComponent},
+     
     ])
   ]
 })

@@ -1,7 +1,6 @@
 export const environment = {
     production: false,
-    //apiUrl: 'https://gymeats.azurewebsites.net',
-    apiUrl: 'https://localhost:7043',
+    apiUrl: 'https://localhost:7176',
     apiKey:'peONDsofens8dfs6sfYi4RvtTwlEXpQBwo==',
     testUser: {
       // tslint:disable

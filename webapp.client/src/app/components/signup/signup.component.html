@@ -91,15 +91,15 @@
   
       <!-- Mobile Field -->
       <div class="form-group">
-        <label for="mobile">Mobile:</label>
+        <label for="mobile">Phone:</label>
         <input
           id="mobile"
           type="text"
-          formControlName="mobile"
+          formControlName="phone"
           class="form-control"
           placeholder="Enter your mobile number"
         />
-        <small *ngIf="signupForm.get('mobile')?.touched && signupForm.get('mobile')?.invalid" class="error">
+        <small *ngIf="signupForm.get('phone')?.touched && signupForm.get('phone')?.invalid" class="error">
           Mobile is required and must be a valid number.
         </small>
       </div>
@@ -124,4 +124,5 @@
       </button>
     </form>
   </div>
+  <p-toast></p-toast>
   

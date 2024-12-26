@@ -1,8 +1,8 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { LoginModel } from '../interfaces/login-model';
-import { Observable } from 'rxjs';
+import { AuthenticatedResponse, LoginModel } from '../interfaces/login-model';
+import { catchError, Observable, throwError } from 'rxjs';
 import { SignupModel } from '../interfaces/signup-model';
 
 @Injectable({
@@ -24,11 +24,20 @@ export class AuthService {
   }
 
   login(credentials: LoginModel): Observable<any> {
-    return this.http.post<string>(`${this.apiUrl}/api/Auth/login`, credentials,{headers:this.headers});
+    return this.http.post<AuthenticatedResponse>(
+      `${this.apiUrl}/api/Auth/login`,
+      credentials,
+      { headers: this.headers }
+    ).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('Login API error:', error);
+        return throwError(() => new Error(error.message || 'Server error occurred.'));
+      })
+    );
   }
 
   signup(request: SignupModel): Observable<any> {
-    return this.http.post<string>(`${this.apiUrl}/api/Auth/signup`, request,{headers:this.headers});
+    return this.http.post<any>(`${this.apiUrl}/api/Auth/signup`, request,{headers:this.headers});
   }
 
 }

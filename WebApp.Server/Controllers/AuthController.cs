@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using WebApp.Model.Auth;
+using WebApp.Model.Common;
 using WebApp.Service.Auth;
 
 namespace WebApp.Server.Controllers
@@ -21,11 +21,11 @@ namespace WebApp.Server.Controllers
             try
             {
                 var result = await _authService.SignUpUser(model);
-                return Ok(result);
+                return Ok(new ApiResponse(true, "User signup successfully", result));
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return BadRequest(new ApiResponse(false, ex.Message, ex));
             }
         }
 
@@ -35,11 +35,11 @@ namespace WebApp.Server.Controllers
             try
             {
                 var result = await _authService.Login(model);
-                return Ok(result);
+                return Ok(new ApiResponse(true, "Login Successfull", result));
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                return BadRequest(new ApiResponse(false, ex.Message, null));
             }
         }
     }

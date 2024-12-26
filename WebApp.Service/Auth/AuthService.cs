@@ -38,11 +38,15 @@ namespace WebApp.Service.Auth
                 {
                     throw new Exception("User is already exists.");
                 }
+
                 var user = _mapper.Map<User>(model);
                 user.CreatedOn = DateTime.UtcNow;
                 user.IsActive = true;
                 user.IsDeleted = false;
-                await _userManager.CreateAsync(user);
+                user.UserName = model.Email;
+                user.EmailConfirmed = true;
+                user.Id = Guid.NewGuid().ToString();
+                var res = await _userManager.CreateAsync(user,model.Password);
                 await _userManager.AddToRoleAsync(user, "User");
                 await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 return true;
