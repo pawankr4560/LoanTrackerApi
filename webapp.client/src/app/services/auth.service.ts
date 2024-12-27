@@ -4,6 +4,8 @@ import { environment } from 'src/environments/environment';
 import { AuthenticatedResponse, LoginModel } from '../interfaces/login-model';
 import { catchError, Observable, throwError } from 'rxjs';
 import { SignupModel } from '../interfaces/signup-model';
+import jwt_decode from 'jwt-decode';
+import { JwtHelperService } from "@auth0/angular-jwt";
 
 @Injectable({
   providedIn: 'root'
@@ -47,5 +49,26 @@ export class AuthService {
       `${this.apiUrl}/api/Auth/getaddress?address=${encodeURIComponent(address)}`, 
       { headers: this.headers }
     );
+  }
+
+  getRole() {
+    var validToken = localStorage.getItem("jwt");
+    if (validToken == null)
+       {
+      return false;
+    }
+
+    const decodeToken: any = jwt_decode(validToken);
+    return decodeToken["role"].toLowerCase();
+  }
+
+  get loginRequired(): boolean {
+    var token = localStorage.getItem("jwt");
+    if (token == null) {
+      return true;
+    }
+    const helper = new JwtHelperService();
+    const isExpired = helper.isTokenExpired(token!);
+    return isExpired ? true : false;
   }
 }

@@ -8,12 +8,17 @@ import { RouterModule } from '@angular/router';
 import { SignupComponent } from './components/signup/signup.component';
 import { ToastModule } from 'primeng/toast';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AdmindashboardComponent } from './components/admindashboard/admindashboard.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { AuthGuard } from './auth/auth.guard';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    SignupComponent
+    SignupComponent,
+    AdmindashboardComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
@@ -25,10 +30,17 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     RouterModule.forRoot([
       {
         path: '',
-        loadChildren: () => import('./modules/auth/auth.module').then(m => m.AuthModule)
+        loadChildren: () => import('./modules/auth/auth.module').then(m => m.AuthModule),
+        
+      },
+      {
+        path: 'error',
+        loadChildren: () => import('./modules/error/error.module').then(m => m.ErrorModule),
+      },
+      {
+        path: '**',
+        redirectTo: 'error'
       }
-     
-
     ])
   ],
   providers: [],
