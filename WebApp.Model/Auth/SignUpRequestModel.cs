@@ -23,6 +23,9 @@ namespace WebApp.Model.Auth
         public string LastName { get; set; } = string.Empty;
 
         [Required]
-        public long Phone { get; set; } 
+        public long Phone { get; set; }
+
+        [Required]
+        public string Address { get; set; } = string.Empty;
     }
 }

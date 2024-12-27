@@ -11,7 +11,8 @@ import { Router } from '@angular/router';
 })
 export class SignupComponent implements OnInit{
   signupForm: FormGroup;
-
+  suggestions : any;
+  addressData : any;
   constructor(private fb: FormBuilder,
      private authService: AuthService,
      private messageService : MessageService,
@@ -50,7 +51,6 @@ export class SignupComponent implements OnInit{
 
         },
         error: (err) => {
-          debugger
           console.log(err);
           this.messageService.add({ severity: 'error', summary: 'Success', detail: 'err.message' });
         }
@@ -62,8 +62,37 @@ export class SignupComponent implements OnInit{
     }
   }
 
-  ngOnInit(): void {
+  getAddress(address: any)
+  {
+  console.log(address);
+  
+   this.authService.getAddressSuggestions(address.value).subscribe({
+    next: async (response) => {
+   
+      if (response && response.data && Array.isArray(response.data.predictions)) {
+        this.addressData = response.data; // Assign data to addressData
+        this.suggestions = this.addressData.predictions.map((prediction: { description: any; }) => prediction.description); // Extract descriptions only
+        console.log('Descriptions:', this.suggestions); // Log descriptions to verify
+      } else {
+        console.error('Predictions data not found in the response');
+        this.suggestions = []; // Clear suggestions if no predictions are found
+      }
+    },
+    error: (err) => {
+      console.log(err);
+      this.messageService.add({ severity: 'error', summary: 'Success', detail: 'err.message' });
+    }
+   })
   
   }
 
+  ngOnInit(): void {
+  
+  }
+  
+  selectAddress(address: string): void {
+    // Set the selected address to the address form field
+    this.signupForm.controls['address'].setValue(address);
+    this.suggestions = [];  // Clear suggestions after selection
+  }
 }

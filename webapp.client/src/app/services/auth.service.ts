@@ -39,5 +39,13 @@ export class AuthService {
   signup(request: SignupModel): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/api/Auth/signup`, request,{headers:this.headers});
   }
-
+  
+  getAddressSuggestions(address: string): Observable<any> {
+    // const url = `${this.apiUrl}?address=${encodeURIComponent(address)}`;
+    // return this.http.get(url);
+    return this.http.get(
+      `${this.apiUrl}/api/Auth/getaddress?address=${encodeURIComponent(address)}`, 
+      { headers: this.headers }
+    );
+  }
 }

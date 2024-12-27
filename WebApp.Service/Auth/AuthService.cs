@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Newtonsoft.Json;
 using WebApp.Data;
 using WebApp.Data.Entity;
 using WebApp.Model.Auth;
@@ -17,17 +18,20 @@ namespace WebApp.Service.Auth
         private readonly SignInManager<User> _signInManager;
         private readonly WebAppDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly HttpClient _httpClient;
 
         public AuthService(UserManager<User> userManager,
             SignInManager<User> signInManager,
             WebAppDbContext dbContext,
             Microsoft.Extensions.Configuration.IConfiguration configuration,
-            IMapper mapper)
+            IMapper mapper,
+            HttpClient httpClient)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _dbContext = dbContext;
             _mapper = mapper;
+            _httpClient = httpClient;
         }
 
         public async Task<bool> SignUpUser(SignUpRequestModel model)
@@ -100,13 +104,34 @@ namespace WebApp.Service.Auth
                 "https://localhost:7176/",
                 identity.Claims,
                 signingCredentials: creds
-               );
+            );
 
             user.LoginCount += 1;
             user.LastLogin = DateTime.UtcNow;
             await _userManager.UpdateAsync(user);
 
             return new JwtSecurityTokenHandler().WriteToken(token); 
+        }
+
+        public async Task<UserAddressResponseModel> GetAddress(string address)
+        {
+            try
+            {
+                string url = $"https://maps.googleapis.com/maps/api/place/autocomplete/json?input={Uri.EscapeDataString(address)}&key={"AIzaSyCKoMQs - ZZgHFUNglLpdGlpsXiD2JrXjhE"}&types=establishment";
+               
+                HttpResponseMessage response = await _httpClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var res = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<UserAddressResponseModel>(res);
+                }
+                else
+                {
+                    throw new HttpRequestException($"Error calling Google Places API: {response.StatusCode}");
+                }
+            }
+            catch (Exception) { throw; }
         }
     }
 }

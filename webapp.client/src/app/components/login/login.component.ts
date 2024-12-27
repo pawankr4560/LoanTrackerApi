@@ -50,7 +50,6 @@ export class LoginComponent implements OnInit {
     // Navigate to the registration page
     this.router.navigate(['/signup']);
   }
-  
 
   ngOnInit(): void {
     

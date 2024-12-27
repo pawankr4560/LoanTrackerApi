@@ -42,5 +42,19 @@ namespace WebApp.Server.Controllers
                 return BadRequest(new ApiResponse(false, ex.Message, null));
             }
         }
+
+        [HttpGet("GetAddress")]
+        public async Task<IActionResult> UserAddress(string address)
+        {
+            try
+            {
+                var result = await _authService.GetAddress(address);
+                return Ok(new ApiResponse(true, null, result));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiResponse(false, ex.Message, null));
+            }
+        }
     }
 }

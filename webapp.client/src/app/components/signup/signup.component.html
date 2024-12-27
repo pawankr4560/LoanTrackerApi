@@ -103,6 +103,30 @@
           Mobile is required and must be a valid number.
         </small>
       </div>
+
+        <!-- Search Bar for Address -->
+    <div class="form-group">
+      <label for="searchAddress">Search Address:</label>
+      <input
+      id="searchAddress"
+      type="text"
+      placeholder="Search for an address"
+      #autocompleteInput
+      class="form-control"
+      (input)="getAddress($event.target)" 
+    />
+    </div>
+
+     <!-- Suggestions List -->
+     <div *ngIf="suggestions.length > 0" class="suggestions-container">
+      <ul class="list-group" style="cursor: pointer;">
+        <li *ngFor="let suggestion of suggestions" 
+            class="list-group-item"
+            (click)="selectAddress(suggestion)">
+          {{ suggestion }}
+        </li>
+      </ul>
+    </div>
   
       <!-- Address Field -->
       <div class="form-group">
