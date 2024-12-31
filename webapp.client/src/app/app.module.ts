@@ -11,6 +11,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AdmindashboardComponent } from './components/admindashboard/admindashboard.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AuthGuard } from './auth/auth.guard';
+import { FacebookLoginProvider, GoogleLoginProvider, GoogleSigninButtonModule, SocialAuthServiceConfig, SocialLoginModule } from '@abacritt/angularx-social-login';
+import { GoogleLoginComponent } from './components/google-login/google-login.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +20,8 @@ import { AuthGuard } from './auth/auth.guard';
     LoginComponent,
     SignupComponent,
     AdmindashboardComponent,
-    DashboardComponent
+    DashboardComponent,
+    GoogleLoginComponent
   ],
   imports: [
     BrowserModule,
@@ -26,6 +29,8 @@ import { AuthGuard } from './auth/auth.guard';
     ReactiveFormsModule,
     HttpClientModule,
     ToastModule,
+    SocialLoginModule,
+    GoogleSigninButtonModule,
     BrowserAnimationsModule,
     RouterModule.forRoot([
       {
@@ -43,7 +48,30 @@ import { AuthGuard } from './auth/auth.guard';
       }
     ])
   ],
-  providers: [],
+  providers: [
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        lang: 'en',
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(
+              '154680420839-m4qrud76jiphfnvl905qipt6to24phvq.apps.googleusercontent.com',
+              {
+                oneTapEnabled: false,
+                prompt  :'consent'
+              }
+            ),
+          }
+        ],
+        onError: (err: any) => {
+          console.error(err);
+        }
+      } as SocialAuthServiceConfig,
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
