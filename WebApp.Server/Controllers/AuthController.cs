@@ -1,7 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Google.Apis.Auth;
+using Microsoft.AspNetCore.Mvc;
 using WebApp.Model.Auth;
 using WebApp.Model.Common;
 using WebApp.Service.Auth;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Newtonsoft.Json.Linq;
+
 
 namespace WebApp.Server.Controllers
 {
@@ -40,6 +46,41 @@ namespace WebApp.Server.Controllers
             catch (Exception ex)
             {
                 return BadRequest(new ApiResponse(false, ex.Message, null));
+            }
+        }
+
+
+        [HttpGet("VerifyToken")]
+        public async Task<IActionResult> VerifyGoogleToken(string idToken)
+        {
+            try
+            {
+                var payload = await GoogleJsonWebSignature.ValidateAsync(idToken, new GoogleJsonWebSignature.ValidationSettings()
+                {
+                    Clock = new Clock(),
+                    Audience = new[] { "154680420839-m4qrud76jiphfnvl905qipt6to24phvq.apps.googleusercontent.com" }
+                });
+
+
+                var claims = new List<Claim>
+        {
+            new Claim(JwtRegisteredClaimNames.UniqueName, payload.Email),
+            new Claim("Email", payload.Email),
+            new Claim("Id", payload.JwtId),
+            new Claim("Name", payload.Name),
+            new Claim("Role", "User")
+        };
+
+                var result = _authService.GetToken(claims);
+                return Ok(new ApiResponse(true, null, result));
+            }
+            catch (InvalidJwtException ex)
+            {
+                return BadRequest(new { message = "Invalid Google token.", details = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = "Unexpected error.", details = ex.Message });
             }
         }
 

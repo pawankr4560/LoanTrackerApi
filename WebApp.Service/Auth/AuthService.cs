@@ -93,24 +93,11 @@ namespace WebApp.Service.Auth
                 claims.Add(new Claim("role", role));
             }
 
-            var identity = new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("zxcvldjhytpsmngvzwjsetveuydededexw_@jfdsfs=__"));
-
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-                "https://localhost:7176/",
-                "https://localhost:7176/",
-                identity.Claims,
-                signingCredentials: creds
-            );
-
             user.LoginCount += 1;
             user.LastLogin = DateTime.UtcNow;
             await _userManager.UpdateAsync(user);
 
-            return new JwtSecurityTokenHandler().WriteToken(token); 
+            return GetToken(claims); 
         }
 
         public async Task<UserAddressResponseModel> GetAddress(string address)
@@ -130,6 +117,28 @@ namespace WebApp.Service.Auth
                 {
                     throw new HttpRequestException($"Error calling Google Places API: {response.StatusCode}");
                 }
+            }
+            catch (Exception) { throw; }
+        }
+
+        public string GetToken(List<Claim> claims)
+        {
+            try
+            {
+                var identity = new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
+
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("zxcvldjhytpsmngvzwjsetveuydededexw_@jfdsfs=__"));
+
+                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+                var token = new JwtSecurityToken(
+                    "https://localhost:7176/",
+                    "https://localhost:7176/",
+                    identity.Claims,
+                    expires:DateTime.UtcNow.AddHours(5),
+                    signingCredentials: creds
+                );
+                return new JwtSecurityTokenHandler().WriteToken(token);
             }
             catch (Exception) { throw; }
         }

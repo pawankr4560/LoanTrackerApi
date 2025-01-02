@@ -46,5 +46,20 @@
     <!-- Error Message -->
     <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
   </div>
+
+  <div class="login-card">
+    <asl-google-signin-button 
+      type="standard" 
+      size="medium" 
+      shape="pill"
+      text="continue_with"
+      theme="outline"
+      logo_alignment="center"
+      class="google-signin-btn">
+    </asl-google-signin-button>
+  </div>
   
+  
+<p-progressSpinner styleClass="w-4rem h-4rem" strokeWidth="5" fill="var(--surface-ground)" animationDuration=".5s" *ngIf="loading"></p-progressSpinner>
+
   <p-toast></p-toast>

@@ -10,9 +10,8 @@ import { ToastModule } from 'primeng/toast';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AdmindashboardComponent } from './components/admindashboard/admindashboard.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { AuthGuard } from './auth/auth.guard';
-import { FacebookLoginProvider, GoogleLoginProvider, GoogleSigninButtonModule, SocialAuthServiceConfig, SocialLoginModule } from '@abacritt/angularx-social-login';
-import { GoogleLoginComponent } from './components/google-login/google-login.component';
+import { GoogleLoginProvider, GoogleSigninButtonModule, SocialAuthServiceConfig, SocialLoginModule } from '@abacritt/angularx-social-login';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @NgModule({
   declarations: [
@@ -20,12 +19,12 @@ import { GoogleLoginComponent } from './components/google-login/google-login.com
     LoginComponent,
     SignupComponent,
     AdmindashboardComponent,
-    DashboardComponent,
-    GoogleLoginComponent
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
-     HttpClientModule,
+    HttpClientModule,
+    ProgressSpinnerModule,
     ReactiveFormsModule,
     HttpClientModule,
     ToastModule,

@@ -6,19 +6,15 @@ import { SignupComponent } from 'src/app/components/signup/signup.component';
 import { AdmindashboardComponent } from 'src/app/components/admindashboard/admindashboard.component';
 import { DashboardComponent } from 'src/app/components/dashboard/dashboard.component';
 import { AuthGuard } from 'src/app/auth/auth.guard';
-import { GoogleLoginComponent } from 'src/app/components/google-login/google-login.component';
-
 
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
-
     RouterModule.forChild([
       
       {path:'',component:LoginComponent},
-      {path:'google-login',component:GoogleLoginComponent},
 
       {path:'signup',component:SignupComponent},
       { 

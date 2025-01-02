@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { MessageService } from 'primeng/api';
 import jwt_decode from 'jwt-decode';
+import { SocialAuthService } from '@abacritt/angularx-social-login';
 
 @Component({
   selector: 'app-login',
@@ -16,11 +17,14 @@ export class LoginComponent implements OnInit {
   errorMessage: string | null = null;
   errorMsg  = "";
   role : string='';
+  loading :boolean=false;
 
   constructor(private fb: FormBuilder,
      private router: Router,
      private authService : AuthService,
-     private messageService: MessageService) {
+     private messageService: MessageService,
+     private googleService : SocialAuthService
+     ) {
      this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -31,7 +35,6 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.valid) {
       
       this.authService.login(this.loginForm.value).subscribe({
-
         next: async (response) => {
           console.log(response.data);
           const token = response.data;
@@ -79,5 +82,46 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     
+      this.googleService.authState.subscribe({
+        next:(result) =>{
+          this.loading = true;
+          const idToken = result.idToken
+         console.log(result);
+         this.authService.verifyToken(idToken).subscribe({
+          next:async (result)=>{
+            localStorage.setItem("jwt", result.data);
+                      const decodedToken: any = jwt_decode(result.data);
+                      
+                      this.role = this.authService.getRole();
+            
+                      if (this.role.toLowerCase() === 'admin')
+                      {
+                        await new Promise<void>(resolve => setTimeout(resolve, 1000));
+                        this.loading = false;
+                        this.router.navigate(['admin']);
+                      } 
+            
+                      else if (this.role.toLocaleLowerCase() === 'user')
+                      {
+                        await new Promise<void>(resolve => setTimeout(resolve, 1000));
+                        this.loading =false;
+                        this.router.navigate(['dashboard']);
+                      }
+            
+                      else
+                      {
+                        console.error('Unknown role:', decodedToken.role);
+                      }
+                      
+          },
+          error:(err)=>{
+            console.log(err);
+          }
+         })
+        },
+        error:(err)=>{
+          console.error(err);
+        }
+      })
   }
 }

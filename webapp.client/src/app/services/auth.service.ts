@@ -43,8 +43,6 @@ export class AuthService {
   }
   
   getAddressSuggestions(address: string): Observable<any> {
-    // const url = `${this.apiUrl}?address=${encodeURIComponent(address)}`;
-    // return this.http.get(url);
     return this.http.get(
       `${this.apiUrl}/api/Auth/getaddress?address=${encodeURIComponent(address)}`, 
       { headers: this.headers }
@@ -57,9 +55,8 @@ export class AuthService {
        {
       return false;
     }
-
     const decodeToken: any = jwt_decode(validToken);
-    return decodeToken["role"].toLowerCase();
+    return decodeToken["Role"].toLowerCase();
   }
 
   get loginRequired(): boolean {
@@ -71,4 +68,12 @@ export class AuthService {
     const isExpired = helper.isTokenExpired(token!);
     return isExpired ? true : false;
   }
+
+  verifyToken(idToken: string): Observable<any> {
+    return this.http.get(
+      `${this.apiUrl}/api/Auth/VerifyToken?idToken=${encodeURIComponent(idToken)}`,
+      { headers: this.headers }
+    );
+  }
+
 }
