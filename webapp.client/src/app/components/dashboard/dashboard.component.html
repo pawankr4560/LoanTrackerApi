@@ -1,21 +1,28 @@
-<p-table [value]="users"   [paginator]="true"
-[rows]="5"
-[tableStyle]="{ 'min-width': '50rem' }"
-[rowsPerPageOptions]="[5, 10, 20]">
-    <ng-template #header>
-        <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Gender</th>
-            <th>LoginCount</th>
+<p-table [value]="users" [paginator]="true" [rows]="5" [showCurrentPageReport]="true"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} records" [rowsPerPageOptions]="[5, 10, 20]">
+    <ng-template pTemplate="header">
+        <tr id="quesTblHeader">
+            <th style="width: 28%;">Name</th>
+            <th style="width: 28%;">Email</th>
+            <th style="width: 28%;">Gender</th>
+            <th style="width: 16%;">Phone</th>
+            <th style="width: 16%;">LastLogin</th>
+            <th style="width: 16%;">LoginCount</th>
+            <th style="width: 16%;">Address</th>
+            <th style="width: 16%;">IsActive</th>
         </tr>
     </ng-template>
-    <ng-template #body let-user>
-        <tr>
+    <ng-template pTemplate="body" let-user>
+        <tr >
             <td>{{ user.firstName + user.lastName }}</td>
             <td>{{ user.email }}</td>
             <td>{{ user.gender }}</td>
+            <td>{{ user.phone }}</td>
+            <td>{{ user.lastLogin }}</td>
             <td>{{ user.loginCount }}</td>
+            <td>{{ user.address }}</td>
+            <td>{{ user.isActive }}</td>
         </tr>
     </ng-template>
 </p-table>
