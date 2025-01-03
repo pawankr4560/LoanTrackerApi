@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using WebApp.Data.Entity;
 using WebApp.Model.Auth;
 
 namespace WebApp.Service.Auth
@@ -9,5 +10,6 @@ namespace WebApp.Service.Auth
         Task<string> Login(LoginRequestModel model);
         Task<UserAddressResponseModel> GetAddress(string address);
         string GetToken(List<Claim> claims);
+        Task<List<User>> UserList();
     }
 }

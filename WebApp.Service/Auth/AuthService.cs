@@ -90,7 +90,7 @@ namespace WebApp.Service.Auth
 
             foreach (var role in roles)
             {
-                claims.Add(new Claim("role", role));
+                claims.Add(new Claim("Role", role));
             }
 
             user.LoginCount += 1;
@@ -139,6 +139,15 @@ namespace WebApp.Service.Auth
                     signingCredentials: creds
                 );
                 return new JwtSecurityTokenHandler().WriteToken(token);
+            }
+            catch (Exception) { throw; }
+        }
+
+        public async Task<List<User>> UserList()
+        {
+            try
+            {
+                return await _dbContext.Users.ToListAsync();
             }
             catch (Exception) { throw; }
         }

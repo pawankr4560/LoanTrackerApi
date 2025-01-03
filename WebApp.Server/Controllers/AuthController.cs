@@ -97,5 +97,19 @@ namespace WebApp.Server.Controllers
                 return BadRequest(new ApiResponse(false, ex.Message, null));
             }
         }
+
+        [HttpGet("UserList")]
+        public async Task<IActionResult> GetUsers()
+        {
+            try
+            {
+                var result = await _authService.UserList();
+                return Ok(new ApiResponse(true, null, result));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiResponse(false, ex.Message, null));
+            }
+        }
     }
 }

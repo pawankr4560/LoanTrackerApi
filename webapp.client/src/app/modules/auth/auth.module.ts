@@ -7,7 +7,6 @@ import { AdmindashboardComponent } from 'src/app/components/admindashboard/admin
 import { DashboardComponent } from 'src/app/components/dashboard/dashboard.component';
 import { AuthGuard } from 'src/app/auth/auth.guard';
 
-
 @NgModule({
   declarations: [],
   imports: [

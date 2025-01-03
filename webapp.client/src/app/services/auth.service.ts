@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { AuthenticatedResponse, LoginModel } from '../interfaces/login-model';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { SignupModel } from '../interfaces/signup-model';
 import jwt_decode from 'jwt-decode';
 import { JwtHelperService } from "@auth0/angular-jwt";
@@ -75,5 +75,12 @@ export class AuthService {
       { headers: this.headers }
     );
   }
+  getUsers(): Observable<any[]> {
+    return this.http.get<any>(
+      `${this.apiUrl}/api/Auth/UserList`,
+      { headers: this.headers }
+    );
+  }
+
 
 }

@@ -12,6 +12,7 @@ import { AdmindashboardComponent } from './components/admindashboard/admindashbo
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { GoogleLoginProvider, GoogleSigninButtonModule, SocialAuthServiceConfig, SocialLoginModule } from '@abacritt/angularx-social-login';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { TableModule } from 'primeng/table';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     ReactiveFormsModule,
     HttpClientModule,
     ToastModule,
+    TableModule,
     SocialLoginModule,
     GoogleSigninButtonModule,
     BrowserAnimationsModule,
