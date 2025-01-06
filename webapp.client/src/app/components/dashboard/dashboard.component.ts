@@ -7,21 +7,12 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  data : any;
-  users : any;
-  constructor(private userService: AuthService, private cdr: ChangeDetectorRef) {}
-
 ngOnInit() {
-    this.userService.getUsers().subscribe({
-      next : (res) => {
-        this.data = res;
-        this.users = this.data.data;
-        console.log(this.users);
-        this.cdr.detectChanges(); // Force update
-      },
-      error : (err) => {
-        console.log(err);
-      }
-    });
+  
+}
+isSidebarOpen = false;
+
+toggleSidebar() {
+  this.isSidebarOpen = !this.isSidebarOpen;
 }
 }

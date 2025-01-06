@@ -6,5 +6,12 @@ import { Component } from '@angular/core';
   styleUrls: ['./admindashboard.component.css']
 })
 export class AdmindashboardComponent {
-
+  ngOnInit() {
+  
+  }
+  isSidebarOpen = false;
+  
+  toggleSidebar() {
+    this.isSidebarOpen = !this.isSidebarOpen;
+  }
 }

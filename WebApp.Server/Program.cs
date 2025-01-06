@@ -9,6 +9,7 @@ using WebApp.Data;
 using WebApp.Data.Entity;
 using WebApp.Data.SeedData;
 using WebApp.Service.Auth;
+using WebApp.Service.Product;
 
 
 namespace GymEats.Api
@@ -69,6 +70,7 @@ namespace GymEats.Api
             builder.Logging.AddDebug();
 
             builder.Services.AddTransient<IAuthService, AuthService>();
+            builder.Services.AddTransient<IProductService, ProductService>();
             
 
             builder.Services.AddOptions();

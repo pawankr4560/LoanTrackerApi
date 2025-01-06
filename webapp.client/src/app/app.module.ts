@@ -2,7 +2,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './components/login/login.component';
 import { RouterModule } from '@angular/router';
 import { SignupComponent } from './components/signup/signup.component';
@@ -13,6 +13,10 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { GoogleLoginProvider, GoogleSigninButtonModule, SocialAuthServiceConfig, SocialLoginModule } from '@abacritt/angularx-social-login';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TableModule } from 'primeng/table';
+import { UserComponent } from './components/user/user.component';
+import { ToggleButtonModule } from 'primeng/togglebutton';
+import { ButtonModule } from 'primeng/button';
+import { ProductComponent } from './components/product/product.component';
 
 @NgModule({
   declarations: [
@@ -20,15 +24,21 @@ import { TableModule } from 'primeng/table';
     LoginComponent,
     SignupComponent,
     AdmindashboardComponent,
-    DashboardComponent
+    DashboardComponent,
+    UserComponent,
+    ProductComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
+    FormsModule,
     ProgressSpinnerModule,
     ReactiveFormsModule,
     HttpClientModule,
+    ToggleButtonModule,
+    ToggleButtonModule,
     ToastModule,
+    ButtonModule,
     TableModule,
     SocialLoginModule,
     GoogleSigninButtonModule,

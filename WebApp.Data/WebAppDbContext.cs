@@ -16,5 +16,7 @@ namespace WebApp.Data
         {
             base.OnModelCreating(modelBuilder);
         }
+
+        public DbSet<Product> Products { get; set; }
     }
 }

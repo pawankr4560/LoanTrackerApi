@@ -6,7 +6,7 @@ import { SignupComponent } from 'src/app/components/signup/signup.component';
 import { AdmindashboardComponent } from 'src/app/components/admindashboard/admindashboard.component';
 import { DashboardComponent } from 'src/app/components/dashboard/dashboard.component';
 import { AuthGuard } from 'src/app/auth/auth.guard';
-
+import { UserComponent } from 'src/app/components/user/user.component';
 @NgModule({
   declarations: [],
   imports: [
@@ -14,6 +14,7 @@ import { AuthGuard } from 'src/app/auth/auth.guard';
     RouterModule.forChild([
       
       {path:'',component:LoginComponent},
+      {path:'users',component:UserComponent},
 
       {path:'signup',component:SignupComponent},
       { 
