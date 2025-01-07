@@ -6,7 +6,7 @@ namespace WebApp.Service.Product
     {
         Task<bool> Add(CreateProductRequestModel model);
         Task<bool> Delete(Guid id);
-        Task<IEnumerable<Data.Entity.Product>> ProductList();
+        IEnumerable<Data.Entity.Product> ProductList();
         Task<bool> Update(UpdateProductModel model);
     }
 }

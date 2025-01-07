@@ -16,7 +16,9 @@ import { TableModule } from 'primeng/table';
 import { UserComponent } from './components/user/user.component';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
 import { ProductComponent } from './components/product/product.component';
+import { CartComponent } from './components/cart/cart.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,8 @@ import { ProductComponent } from './components/product/product.component';
     AdmindashboardComponent,
     DashboardComponent,
     UserComponent,
-    ProductComponent
+    ProductComponent,
+    CartComponent
   ],
   imports: [
     BrowserModule,
@@ -40,6 +43,7 @@ import { ProductComponent } from './components/product/product.component';
     ToastModule,
     ButtonModule,
     TableModule,
+    CardModule,
     SocialLoginModule,
     GoogleSigninButtonModule,
     BrowserAnimationsModule,

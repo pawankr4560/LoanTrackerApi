@@ -17,11 +17,11 @@ namespace WebApp.Server.Controllers
         }
 
         [HttpGet("ProductList")]
-        public async Task<IActionResult> GetProduct()
+        public  IActionResult GetProduct()
         {
             try
             {
-                var result = await _productService.ProductList();
+                var result =  _productService.ProductList();
                 return Ok(new ApiResponse(true, null, result));
             }
             catch (Exception ex)
@@ -59,11 +59,11 @@ namespace WebApp.Server.Controllers
         }
 
         [HttpDelete("RemoveProduct")]
-        public async Task<IActionResult> Remove(Guid id)
+        public async Task<IActionResult> Remove(string id)
         {
             try
             {
-                var result = await _productService.Delete(id);
+                var result = await _productService.Delete(Guid.Parse(id));
                 return Ok(new ApiResponse(true, "Product deleted successfully.", result));
             }
             catch (Exception ex)

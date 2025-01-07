@@ -17,11 +17,11 @@ namespace WebApp.Service.Product
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<Data.Entity.Product>> ProductList()
+        public IEnumerable<Data.Entity.Product> ProductList()
         {
             try
             {
-                return _dbContext.Products.AsEnumerable();
+                return  _dbContext.Products.AsEnumerable();
             }
             catch (Exception) { throw; }
         }
@@ -60,6 +60,7 @@ namespace WebApp.Service.Product
             try
             {
                 var data = _mapper.Map<Data.Entity.Product>(model);
+                data.Id = Guid.Parse(model.Id);
                 _dbContext.Products.Update(data);
                 await _dbContext.SaveChangesAsync();
                 return true;

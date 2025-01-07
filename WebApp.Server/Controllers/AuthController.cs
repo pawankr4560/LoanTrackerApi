@@ -45,7 +45,7 @@ namespace WebApp.Server.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new ApiResponse(false, ex.Message, null));
+                return BadRequest(new ApiResponse(false, ex.Message, ex.Message));
             }
         }
 

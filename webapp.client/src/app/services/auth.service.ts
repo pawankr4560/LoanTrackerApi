@@ -25,17 +25,21 @@ export class AuthService {
     this.headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
   }
 
+  // login(credentials: LoginModel): Observable<any> {
+  //   return this.http.post<AuthenticatedResponse>(
+  //     `${this.apiUrl}/api/Auth/login`,
+  //     credentials,
+  //     { headers: this.headers }
+  //   ).pipe(
+  //     catchError((error: HttpErrorResponse) => {
+  //       console.error('Login API error:', error);
+  //       return throwError(() => new Error(error.message || 'Server error occurred.'));
+  //     })
+  //   );
+  // }
+
   login(credentials: LoginModel): Observable<any> {
-    return this.http.post<AuthenticatedResponse>(
-      `${this.apiUrl}/api/Auth/login`,
-      credentials,
-      { headers: this.headers }
-    ).pipe(
-      catchError((error: HttpErrorResponse) => {
-        console.error('Login API error:', error);
-        return throwError(() => new Error(error.message || 'Server error occurred.'));
-      })
-    );
+    return this.http.post<AuthenticatedResponse>(`${this.apiUrl}/api/Auth/login`, credentials,{headers:this.headers});
   }
 
   signup(request: SignupModel): Observable<any> {
