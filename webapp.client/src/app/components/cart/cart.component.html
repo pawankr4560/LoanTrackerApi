@@ -1,20 +1,20 @@
 <div class="cart-container">
     <!-- Cart Section -->
-    <div class="cart-section">
+    <div class="cart-section" >
       <h2>My cart</h2>
       <hr />
-      <div class="cart-item">
-        <img src="product-image.jpg" alt="Product" class="cart-item-image" />
+      <div class="cart-item" *ngFor="let product of products">
+        <img [src]="product.image" alt="Product Image" class="product-image" />
         <div class="cart-item-details">
-          <p class="cart-item-name">I'm a product</p>
-          <p class="cart-item-price">₹85.00</p>
+          <p class="cart-item-name">{{product.name}}</p>
+          <p class="cart-item-price">₹{{product.price}}</p>
         </div>
         <div class="cart-item-quantity">
           <button class="quantity-btn">-</button>
-          <input type="number" value="1" min="1" />
+          <input type="number" value="1" min="1" (change)="updateCart(product)" />
           <button class="quantity-btn">+</button>
         </div>
-        <p class="cart-item-total">₹85.00</p>
+        <p class="cart-item-total">₹{{product.price}}</p>
         <button class="delete-item-btn">🗑️</button>
       </div>
       <hr />
@@ -23,7 +23,7 @@
         <a href="#" class="add-note">Add a note</a>
       </div>
     </div>
-  
+
     <!-- Order Summary Section -->
     <div class="order-summary-section">
       <h2>Order summary</h2>

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Product } from 'src/app/interfaces/product';
 import { ProductService } from 'src/app/services/product.service';
 
 @Component({
@@ -8,6 +9,7 @@ import { ProductService } from 'src/app/services/product.service';
 })
 export class ProductComponent implements OnInit {
  products : any;
+ data: Product[] = [];
  constructor(private productService : ProductService) {
   
  }
@@ -23,4 +25,27 @@ export class ProductComponent implements OnInit {
     }
    })
  }
+
+ addItem(product: any): void {
+  debugger;
+  const item = {
+    name: product.name,
+    price: product.price,
+    quantity: 1,
+    image: product.image,
+  };
+
+
+  var result = localStorage.getItem('Products');
+  if(result != null)
+  {
+    this.data = JSON.parse(result);
+    this.data.push(item);
+  }
+  else{
+    this.data.push(item);
+  }
+  localStorage.setItem('Products', JSON.stringify(this.data));
+}
+
 }
