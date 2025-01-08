@@ -2,7 +2,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './components/login/login.component';
 import { RouterModule } from '@angular/router';
 import { SignupComponent } from './components/signup/signup.component';
@@ -19,6 +19,7 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { ProductComponent } from './components/product/product.component';
 import { CartComponent } from './components/cart/cart.component';
+import { DialogModule } from 'primeng/dialog';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { CartComponent } from './components/cart/cart.component';
     BrowserModule,
     HttpClientModule,
     FormsModule,
+    DialogModule,
     ProgressSpinnerModule,
     ReactiveFormsModule,
     HttpClientModule,

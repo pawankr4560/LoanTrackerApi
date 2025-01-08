@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using WebApp.Data.Entity;
 using WebApp.Model.Auth;
+using WebApp.Model.Order;
 using WebApp.Model.Product;
 
 namespace WebApp.Data.Automapper
@@ -12,6 +13,7 @@ namespace WebApp.Data.Automapper
             CreateMap<SignUpRequestModel, User>();
             CreateMap<CreateProductRequestModel, Product>();
             CreateMap<UpdateProductModel, Product>();
+            CreateMap<CreateOrderRequestModel, OrderHistory>();
         }
     }
 }

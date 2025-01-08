@@ -144,3 +144,13 @@
     margin-top: 10px;
   }
   
+  .no-spinners::-webkit-inner-spin-button,
+.no-spinners::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Hide spinners in Firefox */
+.no-spinners[type="number"] {
+  -moz-appearance: textfield;
+}

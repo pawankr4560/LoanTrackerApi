@@ -1,52 +1,55 @@
 <div class="cart-container">
-    <!-- Cart Section -->
-    <div class="cart-section" >
-      <h2>My cart</h2>
-      <hr />
-      <div class="cart-item" *ngFor="let product of products">
-        <img [src]="product.image" alt="Product Image" class="product-image" />
-        <div class="cart-item-details">
-          <p class="cart-item-name">{{product.name}}</p>
-          <p class="cart-item-price">₹{{product.price}}</p>
-        </div>
-        <div class="cart-item-quantity">
-          <button class="quantity-btn">-</button>
-          <input type="number" value="1" min="1" (change)="updateCart(product)" />
-          <button class="quantity-btn">+</button>
-        </div>
-        <p class="cart-item-total">₹{{product.price}}</p>
-        <button class="delete-item-btn">🗑️</button>
+  <div class="cart-section">
+    <h2>My Cart</h2>
+    <hr />
+    <div class="cart-item" *ngFor="let product of products">
+      <img [src]="product.image" alt="Product Image" class="product-image" />
+      <div class="cart-item-details">
+        <p class="cart-item-name">{{ product.name }}</p>
+        <p class="cart-item-price">₹{{ product.price }}</p>
       </div>
-      <hr />
-      <div class="cart-options">
-        <a href="#" class="promo-code">Enter a promo code</a>
-        <a href="#" class="add-note">Add a note</a>
+      <div class="cart-item-quantity">
+        <button class="quantity-btn" (click)="decrementQuantity(product)">-</button>
+        <input
+          type="number"
+          [(ngModel)]="product.quantity"
+          class="no-spinners"
+          min="1"
+        />
+        <button class="quantity-btn" (click)="incrementQuantity(product)">+</button>
       </div>
+      <p class="cart-item-total">₹{{ product.totalPrice }}</p>
+      <button class="delete-item-btn">🗑️</button>
     </div>
-
-    <!-- Order Summary Section -->
-    <div class="order-summary-section">
-      <h2>Order summary</h2>
-      <hr />
-      <div class="order-summary-item">
-        <p>Subtotal</p>
-        <p>₹85.00</p>
-      </div>
-      <div class="order-summary-item">
-        <p>Delivery</p>
-        <p>FREE</p>
-      </div>
-      <div class="order-summary-item">
-        <p>Delivery Location</p>
-        <p>Delhi, India</p>
-      </div>
-      <hr />
-      <div class="order-total">
-        <p>Total</p>
-        <p>₹85.00</p>
-      </div>
-      <button class="checkout-btn">Checkout</button>
-      <p class="secure-checkout">🔒 Secure Checkout</p>
+    <hr />
+    <div class="cart-options">
+      <a href="#" class="promo-code">Enter a promo code</a>
+      <a href="#" class="add-note">Add a note</a>
     </div>
   </div>
-  
+
+  <!-- Order Summary Section -->
+  <div class="order-summary-section">
+    <h2>Order Summary</h2>
+    <hr />
+    <div class="order-summary-item">
+      <p>Subtotal</p>
+      <p>₹{{ subtotal }}</p>
+    </div>
+    <div class="order-summary-item">
+      <p>Delivery Fee</p>
+      <p>₹{{ deliveryFee }}</p>
+    </div>
+    <div class="order-summary-item">
+      <p>Service Fee</p>
+      <p>₹{{ serviceFee }}</p>
+    </div>
+    <hr />
+    <div class="order-total">
+      <p>Total</p>
+      <p>₹{{ totalFee }}</p>
+    </div>
+    <button class="checkout-btn">Checkout</button>
+    <p class="secure-checkout">🔒 Secure Checkout</p>
+  </div>
+</div>

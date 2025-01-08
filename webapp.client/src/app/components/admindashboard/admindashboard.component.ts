@@ -41,13 +41,11 @@ export class AdmindashboardComponent {
 
   onSubmit() {
     if (this.productForm.valid) {
-      debugger;
       this.productService.addProduct(this.productForm.value).subscribe({
         next: (response) => {
           alert('Product added successfully!');
         },
         error: (err) => {
-          debugger
           console.error(err);
           alert('Failed to add product.');
         },
