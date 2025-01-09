@@ -17,9 +17,11 @@ get apiUrl(): string {
   }
   
   private headers!: HttpHeaders;
-
   constructor(private http: HttpClient) {
-    this.headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
+    this.headers = new HttpHeaders({
+      'Content-Type': 'application/json; charset=utf-8',
+      'api_key': this.apiKey, 
+    });
   }
   
   addProduct(product: CreateProductRequestModel): Observable<any> {

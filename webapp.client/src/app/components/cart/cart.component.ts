@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { MessageService } from 'primeng/api';
+import { Createorder } from 'src/app/interfaces/createorder';
 import { Product } from 'src/app/interfaces/product';
 import { OrderService } from 'src/app/services/order.service';
 import { ProductService } from 'src/app/services/product.service';
@@ -14,9 +16,11 @@ export class CartComponent implements OnInit {
   deliveryFee: number = 50; // Example static fee
   serviceFee: number = 20; // Example static fee
   totalFee: number = 0;
-
+  orders: Createorder[] = [];
+  
   constructor(private productService: ProductService,
-    private orderService : OrderService
+    private orderService : OrderService,
+    private messageService : MessageService
   ) {}
 
   ngOnInit(): void {
@@ -54,5 +58,23 @@ export class CartComponent implements OnInit {
   updateCart(): void {
     localStorage.setItem('cart', JSON.stringify(this.products));
     this.calculateFees();
+  }
+
+  
+  createOrder()
+  {
+    const storedOrders = localStorage.getItem('cart');
+    this.orders = storedOrders ? JSON.parse(storedOrders) : []; 
+    this.orderService.createOrder(this.orders).subscribe({
+      next : (response)=>{
+        debugger;
+       localStorage.clear();
+       this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Order created successfully.' });
+      console.log(response);
+      },
+      error : (err)=>{
+        console.log(err);
+      }
+    })
   }
 }

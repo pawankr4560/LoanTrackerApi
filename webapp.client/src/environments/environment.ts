@@ -1,7 +1,7 @@
 export const environment = {
     production: false,
     apiUrl: 'https://localhost:7176',
-    apiKey:'peONDsofens8dfs6sfYi4RvtTwlEXpQBwo==',
+    apiKey:'PkyAIzaSyCKoMQs-ZZgHFUNglLpdGlps232@',
     testUser: {
       // tslint:disable
       token: {

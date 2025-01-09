@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using WebApp.Data;
 using WebApp.Data.Entity;
 using WebApp.Model.Order;
@@ -22,10 +23,18 @@ namespace WebApp.Service.Order
             try
             {
                 var request = _mapper.Map<List<OrderHistory>>(model);
-                
                 _dbContext.OrderHistory.AddRange(request);
                 await _dbContext.SaveChangesAsync();
                 return true;
+            }
+            catch (Exception) { throw; }
+        }
+
+        public async Task<dynamic> GetOrders()
+        {
+            try
+            {
+               return await _dbContext.OrderHistory.ToListAsync();
             }
             catch (Exception) { throw; }
         }

@@ -86,6 +86,7 @@ export class ProductComponent implements OnInit {
 
 
   goToCart() {
+    debugger;
     this.router.navigate(['cart']);
   }
 
@@ -130,16 +131,25 @@ export class ProductComponent implements OnInit {
 
   createOrder()
   {
-    debugger;
     const storedOrders = localStorage.getItem('cart');
     this.orders = storedOrders ? JSON.parse(storedOrders) : []; 
     this.orderService.createOrder(this.orders).subscribe({
       next : (response)=>{
+        debugger;
+       localStorage.clear();
+       this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Order created successfully.' });
+       this.closeDialogue()
       console.log(response);
       },
       error : (err)=>{
         console.log(err);
       }
     })
+  }
+
+  closeDialogue()
+  {
+    this.visible = false;
+    //this.router.navigate(['orderdetails']);
   }
 }

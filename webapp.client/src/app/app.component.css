@@ -1,1 +1,21 @@
-﻿
+﻿.d-flex {
+    display: flex;
+    flex-direction: row;
+    height: 100vh; /* Full viewport height */
+  }
+  
+  .sidebar {
+    flex: 0 0 250px; /* Sidebar width */
+    background-color: #f8f9fa; /* Light gray background */
+    border-right: 1px solid #ddd; /* Border to separate sidebar */
+    padding: 20px;
+    overflow-y: auto; /* Scrollbar for sidebar content if needed */
+  }
+  
+  .content {
+    flex: 1; /* Remaining space for main content */
+    padding: 20px;
+    overflow-y: auto; /* Scrollbar for content overflow */
+    background-color: #ffffff; /* White background for content */
+  }
+  

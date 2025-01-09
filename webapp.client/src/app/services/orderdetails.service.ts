@@ -1,13 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { Createorder } from '../interfaces/createorder';
 
 @Injectable({
   providedIn: 'root'
 })
-export class OrderService {
-
+export class OrderdetailsService  {
 get apiUrl(): string {
     return environment.apiUrl;
   }
@@ -23,11 +21,10 @@ get apiUrl(): string {
       'api_key': this.apiKey, 
     });
   }
+ 
 
-
-  createOrder(order : any)
+  getOrders()
   {
-    return this.http.post<any>(`${this.apiUrl}/api/order/createOrder`, order,{headers:this.headers});
+    return this.http.get<any>(`${this.apiUrl}/api/order/orderList`,{headers:this.headers});
   }
-
 }

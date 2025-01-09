@@ -20,6 +20,8 @@ import { CardModule } from 'primeng/card';
 import { ProductComponent } from './components/product/product.component';
 import { CartComponent } from './components/cart/cart.component';
 import { DialogModule } from 'primeng/dialog';
+import { OrderdetailsComponent } from './components/orderdetails/orderdetails.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,9 @@ import { DialogModule } from 'primeng/dialog';
     DashboardComponent,
     UserComponent,
     ProductComponent,
-    CartComponent
+    CartComponent,
+    OrderdetailsComponent,
+    SidebarComponent,
   ],
   imports: [
     BrowserModule,
@@ -62,7 +66,8 @@ import { DialogModule } from 'primeng/dialog';
       {
         path: '**',
         redirectTo: 'error'
-      }
+      },
+      
     ])
   ],
   providers: [

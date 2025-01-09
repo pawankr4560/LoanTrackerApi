@@ -16,11 +16,10 @@ namespace WebApp.Data.Entity
         public float Price { get; set; }
 
         [Required]
-        [StringLength(100)]
         public string Image { get; set; } = string.Empty;
 
         [Required]
-        [StringLength(50)]
+        [StringLength(20)]
         public string Address { get; set; } = string.Empty;
     }
 }

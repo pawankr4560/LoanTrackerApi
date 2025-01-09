@@ -22,7 +22,10 @@ export class AuthService {
   private headers!: HttpHeaders;
 
   constructor(private http: HttpClient) {
-    this.headers = new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
+    this.headers = new HttpHeaders({
+      'Content-Type': 'application/json; charset=utf-8',
+      'api_key': this.apiKey, 
+    });
   }
 
   // login(credentials: LoginModel): Observable<any> {

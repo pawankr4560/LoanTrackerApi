@@ -9,6 +9,7 @@ using WebApp.Data;
 using WebApp.Data.Entity;
 using WebApp.Data.SeedData;
 using WebApp.Service.Auth;
+using WebApp.Service.Middleware;
 using WebApp.Service.Order;
 using WebApp.Service.Product;
 
@@ -147,7 +148,7 @@ namespace GymEats.Api
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
-           
+            app.UseMiddleware<WebAppMiddleware>();
             app.Run();
 
         }

@@ -9,6 +9,8 @@ import { AuthGuard } from 'src/app/auth/auth.guard';
 import { UserComponent } from 'src/app/components/user/user.component';
 import { ProductComponent } from 'src/app/components/product/product.component';
 import { CartComponent } from 'src/app/components/cart/cart.component';
+import { OrderdetailsComponent } from 'src/app/components/orderdetails/orderdetails.component';
+import { SidebarComponent } from 'src/app/components/sidebar/sidebar.component';
 @NgModule({
   declarations: [],
   imports: [
@@ -19,21 +21,24 @@ import { CartComponent } from 'src/app/components/cart/cart.component';
       {path:'users',component:UserComponent},
       {path:'product',component:ProductComponent},
       {path:'cart',component:CartComponent  },
-
+      {path:"orders", component:OrderdetailsComponent},
+      {path:"sidebar", component:SidebarComponent},
       {path:'signup',component:SignupComponent},
+
       { 
         path: 'admin', 
         component: AdmindashboardComponent, 
         canActivate: [AuthGuard], 
         data: { role: 'Admin' } 
       },
+
       { 
         path: 'dashboard', 
         component: DashboardComponent, 
         canActivate: [AuthGuard], 
         data: { role: 'User' } 
       }
-     
+
     ])
   ]
 })
