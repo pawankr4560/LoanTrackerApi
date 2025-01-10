@@ -34,7 +34,7 @@ namespace WebApp.Service.Order
         {
             try
             {
-               return await _dbContext.OrderHistory.ToListAsync();
+               return await _dbContext.OrderHistory.OrderByDescending(x=>x.CreatedOn).ToListAsync();
             }
             catch (Exception) { throw; }
         }

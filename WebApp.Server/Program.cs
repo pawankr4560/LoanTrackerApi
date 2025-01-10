@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Stripe;
 using System.Text;
 using WebApp.Data;
 using WebApp.Data.Entity;
@@ -12,6 +13,7 @@ using WebApp.Service.Auth;
 using WebApp.Service.Middleware;
 using WebApp.Service.Order;
 using WebApp.Service.Product;
+using WebApp.Service.Stripe;
 
 
 namespace GymEats.Api
@@ -72,7 +74,7 @@ namespace GymEats.Api
             builder.Logging.AddDebug();
 
             builder.Services.AddTransient<IAuthService, AuthService>();
-            builder.Services.AddTransient<IProductService, ProductService>();
+            builder.Services.AddTransient<IProductService, WebApp.Service.Product.ProductService>();
             builder.Services.AddTransient<IOrderService, OrderService>();
             
 
@@ -124,6 +126,14 @@ namespace GymEats.Api
         }
     });
             });
+
+            //stripe service
+            builder.Services.AddScoped<IStripeService, StripeService>();
+            builder.Services.AddScoped<CustomerService>();
+            builder.Services.AddScoped<ChargeService>();
+            builder.Services.AddScoped<TokenService>();
+            builder.Services.AddScoped<CardService>();
+            StripeConfiguration.ApiKey = configuration.GetSection("Stripe:Secret_Key").Value.ToString();
 
 
             builder.Services.AddHttpContextAccessor();

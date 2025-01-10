@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Createorder } from 'src/app/interfaces/createorder';
 import { Product } from 'src/app/interfaces/product';
@@ -9,6 +10,7 @@ import { ProductService } from 'src/app/services/product.service';
   selector: 'app-cart',
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css'],
+  providers:[MessageService]
 })
 export class CartComponent implements OnInit {
   products: Product[] = [];
@@ -20,7 +22,8 @@ export class CartComponent implements OnInit {
   
   constructor(private productService: ProductService,
     private orderService : OrderService,
-    private messageService : MessageService
+    private messageService : MessageService,
+    private router : Router
   ) {}
 
   ngOnInit(): void {
@@ -66,11 +69,11 @@ export class CartComponent implements OnInit {
     const storedOrders = localStorage.getItem('cart');
     this.orders = storedOrders ? JSON.parse(storedOrders) : []; 
     this.orderService.createOrder(this.orders).subscribe({
-      next : (response)=>{
-        debugger;
+      next : async (response)=>{
        localStorage.clear();
        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Order created successfully.' });
-      console.log(response);
+       await new Promise<void>(resolve => setTimeout(resolve, 1000));
+       this.router.navigate(['orders']);
       },
       error : (err)=>{
         console.log(err);

@@ -86,7 +86,6 @@ export class ProductComponent implements OnInit {
 
 
   goToCart() {
-    debugger;
     this.router.navigate(['cart']);
   }
 
@@ -134,12 +133,13 @@ export class ProductComponent implements OnInit {
     const storedOrders = localStorage.getItem('cart');
     this.orders = storedOrders ? JSON.parse(storedOrders) : []; 
     this.orderService.createOrder(this.orders).subscribe({
-      next : (response)=>{
+      next : async (response)=>{
         debugger;
        localStorage.clear();
        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Order created successfully.' });
        this.closeDialogue()
-      console.log(response);
+       await new Promise<void>(resolve => setTimeout(resolve, 1000));
+       this.router.navigate(['orders']);
       },
       error : (err)=>{
         console.log(err);

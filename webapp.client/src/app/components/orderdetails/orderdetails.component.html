@@ -1,6 +1,6 @@
 <div class="orders-container">
+  <h3 style="color:rgba(132, 84, 252, 1);">Recent orders</h3>
     <div class="order-section" *ngFor="let order of orders">
-      <h3 style="color:rgba(132, 84, 252, 1);;">Recent orders</h3>
       <div class="order-card in-progress">
         <img [src]="order.image" alt="Product Image" class="product-image" />
         <div class="order-details">
@@ -13,8 +13,6 @@
       </div>
     </div>
   </div>
-
-  
   <div class="card">
     <p-dialog  header="Cart" 
     [(visible)]="visible" 
@@ -39,7 +37,6 @@
           </div>
         </div>
         <hr />
-        
       </div>
   </p-dialog> 
   

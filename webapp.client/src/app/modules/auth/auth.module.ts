@@ -11,6 +11,8 @@ import { ProductComponent } from 'src/app/components/product/product.component';
 import { CartComponent } from 'src/app/components/cart/cart.component';
 import { OrderdetailsComponent } from 'src/app/components/orderdetails/orderdetails.component';
 import { SidebarComponent } from 'src/app/components/sidebar/sidebar.component';
+import { AboutComponent } from 'src/app/components/about/about.component';
+import { ContactComponent } from 'src/app/components/contact/contact.component';
 @NgModule({
   declarations: [],
   imports: [
@@ -24,7 +26,9 @@ import { SidebarComponent } from 'src/app/components/sidebar/sidebar.component';
       {path:"orders", component:OrderdetailsComponent},
       {path:"sidebar", component:SidebarComponent},
       {path:'signup',component:SignupComponent},
-
+      {path:'home',component:ProductComponent},
+      {path:'about',component:AboutComponent},
+      {path:'contact',component:ContactComponent},
       { 
         path: 'admin', 
         component: AdmindashboardComponent, 

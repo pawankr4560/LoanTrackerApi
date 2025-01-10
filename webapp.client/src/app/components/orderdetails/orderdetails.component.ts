@@ -24,12 +24,11 @@ export class OrderdetailsComponent implements OnInit{
       console.log(err);
     }
    })
-
  }
   
-
  showDialogue()
  {
   this.visible = true;
  }
+ 
 }

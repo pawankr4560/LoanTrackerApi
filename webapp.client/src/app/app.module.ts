@@ -22,6 +22,8 @@ import { CartComponent } from './components/cart/cart.component';
 import { DialogModule } from 'primeng/dialog';
 import { OrderdetailsComponent } from './components/orderdetails/orderdetails.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { AboutComponent } from './components/about/about.component';
+import { ContactComponent } from './components/contact/contact.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +37,8 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
     CartComponent,
     OrderdetailsComponent,
     SidebarComponent,
+    AboutComponent,
+    ContactComponent,
   ],
   imports: [
     BrowserModule,
