@@ -11,5 +11,6 @@ namespace WebApp.Service.Auth
         Task<UserAddressResponseModel> GetAddress(string address);
         string GetToken(List<Claim> claims);
         Task<List<User>> UserList();
+        Task<bool> AuthenticateUser(string token);
     }
 }

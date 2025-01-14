@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using WebApp.Data;
 using WebApp.Data.Entity;
 using WebApp.Model.Auth;
+using AutoMapper.Configuration;
 
 namespace WebApp.Service.Auth
 {
@@ -19,6 +20,7 @@ namespace WebApp.Service.Auth
         private readonly WebAppDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly HttpClient _httpClient;
+        private readonly Microsoft.Extensions.Configuration.IConfiguration _configuration;
 
         public AuthService(UserManager<User> userManager,
             SignInManager<User> signInManager,
@@ -32,6 +34,7 @@ namespace WebApp.Service.Auth
             _dbContext = dbContext;
             _mapper = mapper;
             _httpClient = httpClient;
+            _configuration = configuration;
         }
 
         public async Task<bool> SignUpUser(SignUpRequestModel model)
@@ -56,6 +59,12 @@ namespace WebApp.Service.Auth
                 return true;
             }
             catch (Exception) { throw; }
+        }
+
+        public async Task<bool> AuthenticateUser(string token)
+        {
+            var response = await _httpClient.GetAsync($"auth/validate?token={token}");
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<string> Login(LoginRequestModel model)
@@ -123,24 +132,28 @@ namespace WebApp.Service.Auth
 
         public string GetToken(List<Claim> claims)
         {
+            if (claims == null || !claims.Any())
+                throw new ArgumentException("Claims cannot be null or empty.", nameof(claims));
+
             try
             {
-                var identity = new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
-
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("zxcvldjhytpsmngvzwjsetveuydededexw_@jfdsfs=__"));
-
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
                 var token = new JwtSecurityToken(
-                    "https://localhost:7176/",
-                    "https://localhost:7176/",
-                    identity.Claims,
-                    expires:DateTime.UtcNow.AddHours(5),
+                    issuer: _configuration["Jwt:Issuer"],
+                    audience: _configuration["Jwt:Audience"],
+                    claims: claims,
+                    expires: DateTime.UtcNow.AddHours(1),
                     signingCredentials: creds
                 );
+
                 return new JwtSecurityTokenHandler().WriteToken(token);
             }
-            catch (Exception) { throw; }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Error generating JWT token.", ex);
+            }
         }
 
         public async Task<List<User>> UserList()

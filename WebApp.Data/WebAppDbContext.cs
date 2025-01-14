@@ -19,5 +19,6 @@ namespace WebApp.Data
 
         public DbSet<Product> Products { get; set; }
         public DbSet<OrderHistory> OrderHistory { get; set; }
+        public DbSet<StripeCustomer> StripeCustomer { get; set; }
     }
 }

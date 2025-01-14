@@ -5,18 +5,18 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Stripe;
+using Stripe.Climate;
 using System.Text;
 using WebApp.Data;
 using WebApp.Data.Entity;
+using WebApp.Data.Repository;
 using WebApp.Data.SeedData;
 using WebApp.Service.Auth;
 using WebApp.Service.Middleware;
-using WebApp.Service.Order;
 using WebApp.Service.Product;
 using WebApp.Service.Stripe;
 
-
-namespace GymEats.Api
+namespace WebApp.Api
 {
     public class Program
     {
@@ -42,8 +42,7 @@ namespace GymEats.Api
             {
                 opt.AddPolicy("EnableCORS", builder =>
                 {
-
-                 builder.AllowAnyOrigin()
+                    builder.AllowAnyOrigin()
                 .AllowAnyHeader()
                 .AllowAnyMethod();
 
@@ -69,14 +68,27 @@ namespace GymEats.Api
             ).AddEntityFrameworkStores<WebAppDbContext>()
             .AddDefaultTokenProviders();
 
+            //Initialize configuration
+           
             builder.Logging.ClearProviders();
             builder.Logging.AddConsole();
             builder.Logging.AddDebug();
 
+            //Register repository
+            builder.Services.AddTransient<IGenericRepository<StripeCustomer>, GenericRepository<StripeCustomer>>();
+
             builder.Services.AddTransient<IAuthService, AuthService>();
-            builder.Services.AddTransient<IProductService, WebApp.Service.Product.ProductService>();
-            builder.Services.AddTransient<IOrderService, OrderService>();
-            
+            builder.Services.AddTransient<IProductService, Service.Product.ProductService>();
+            builder.Services.AddTransient<OrderService, OrderService>();
+            builder.Services.AddTransient<IStripeService, StripeService>();
+          
+            builder.Services.AddScoped<CustomerService>();
+            builder.Services.AddScoped<ChargeService>();
+            builder.Services.AddScoped<Stripe.ProductService>();
+            builder.Services.AddScoped<Stripe.PriceService>();
+            builder.Services.AddScoped<TokenService>();
+            builder.Services.AddScoped<CardService>();
+            StripeConfiguration.ApiKey = configuration.GetSection("Stripe:Secret_Key").Value.ToString();
 
             builder.Services.AddOptions();
             builder.Services.AddHttpClient();
@@ -102,9 +114,10 @@ namespace GymEats.Api
                 };
 
             });
+
             builder.Services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Webapp", Version = "v1" });
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Web App", Version = "v1" });
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,
@@ -127,14 +140,7 @@ namespace GymEats.Api
     });
             });
 
-            //stripe service
-            builder.Services.AddScoped<IStripeService, StripeService>();
-            builder.Services.AddScoped<CustomerService>();
-            builder.Services.AddScoped<ChargeService>();
-            builder.Services.AddScoped<TokenService>();
-            builder.Services.AddScoped<CardService>();
-            StripeConfiguration.ApiKey = configuration.GetSection("Stripe:Secret_Key").Value.ToString();
-
+            
 
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddEndpointsApiExplorer();
@@ -157,8 +163,10 @@ namespace GymEats.Api
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.MapControllers();
             app.UseMiddleware<WebAppMiddleware>();
+            app.MapControllers();
+            
+
             app.Run();
 
         }
@@ -174,5 +182,4 @@ namespace GymEats.Api
             }
         }
     }
-
 }

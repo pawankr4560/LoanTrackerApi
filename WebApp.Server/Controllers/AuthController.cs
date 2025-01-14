@@ -5,8 +5,6 @@ using WebApp.Model.Common;
 using WebApp.Service.Auth;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
-using Newtonsoft.Json.Linq;
 
 
 namespace WebApp.Server.Controllers
