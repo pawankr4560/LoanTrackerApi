@@ -14,7 +14,6 @@ using WebApp.Data.SeedData;
 using WebApp.Service.Auth;
 using WebApp.Service.Middleware;
 using WebApp.Service.Product;
-using WebApp.Service.Stripe;
 
 namespace WebApp.Api
 {
@@ -23,37 +22,33 @@ namespace WebApp.Api
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            //Add services to the container.
 
-            // Add services to the container.
             builder.Services.AddMvc();
-
             builder.Services.AddControllers().AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.MaxDepth = 128;
             });
 
-
             builder.Services.AddScoped<SeedData>();
 
             // Add services for identity
             var configuration = builder.Configuration;
-
             builder.Services.AddCors(opt =>
             {
                 opt.AddPolicy("EnableCORS", builder =>
                 {
-                    builder.AllowAnyOrigin()
+                 builder.AllowAnyOrigin()
                 .AllowAnyHeader()
                 .AllowAnyMethod();
-
                 });
-
             });
 
             builder.Services.AddDbContext<WebAppDbContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("Default"));
             });
+
             builder.Services.AddIdentity<User, IdentityRole>(
                 option =>
                 {
@@ -69,14 +64,12 @@ namespace WebApp.Api
             .AddDefaultTokenProviders();
 
             //Initialize configuration
-           
             builder.Logging.ClearProviders();
             builder.Logging.AddConsole();
             builder.Logging.AddDebug();
 
             //Register repository
             builder.Services.AddTransient<IGenericRepository<StripeCustomer>, GenericRepository<StripeCustomer>>();
-
             builder.Services.AddTransient<IAuthService, AuthService>();
             builder.Services.AddTransient<IProductService, Service.Product.ProductService>();
             builder.Services.AddTransient<OrderService, OrderService>();
@@ -85,7 +78,7 @@ namespace WebApp.Api
             builder.Services.AddScoped<CustomerService>();
             builder.Services.AddScoped<ChargeService>();
             builder.Services.AddScoped<Stripe.ProductService>();
-            builder.Services.AddScoped<Stripe.PriceService>();
+            builder.Services.AddScoped<PriceService>();
             builder.Services.AddScoped<TokenService>();
             builder.Services.AddScoped<CardService>();
             StripeConfiguration.ApiKey = configuration.GetSection("Stripe:Secret_Key").Value.ToString();
@@ -112,7 +105,6 @@ namespace WebApp.Api
                     ValidAudience = configuration["Jwt:Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
                 };
-
             });
 
             builder.Services.AddSwaggerGen(options =>
@@ -139,23 +131,11 @@ namespace WebApp.Api
         }
     });
             });
-
-            
-
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
             var app = builder.Build();
-
-
             var seeder = new Seeder(app);
-            // Configure the HTTP request pipeline.
-            //if (app.Environment.IsDevelopment())
-            //{
-            //    app.UseSwagger();
-            //    app.UseSwaggerUI();
-            //}
             app.UseSwagger();
             app.UseSwaggerUI();
             app.UseCors("EnableCORS");
@@ -165,11 +145,9 @@ namespace WebApp.Api
             app.UseAuthorization();
             app.UseMiddleware<WebAppMiddleware>();
             app.MapControllers();
-            
-
             app.Run();
-
         }
+
         public class Seeder
         {
             public Seeder(WebApplication app)

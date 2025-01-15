@@ -3,8 +3,8 @@ using Stripe;
 using WebApp.Data.Entity;
 using WebApp.Data.Repository;
 using WebApp.Model.Constant;
+using WebApp.Model.Order;
 using WebApp.Service.Auth;
-using WebApp.Service.Stripe;
 
 public class StripeService : IStripeService
 {
@@ -13,8 +13,11 @@ public class StripeService : IStripeService
     private readonly IGenericRepository<StripeCustomer> _customerRepo;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly Stripe.ProductService _productService;
-    private string userId = string.Empty;
     private readonly PriceService _priceService;
+    private readonly CardService _cardService;
+    private readonly string userId;
+    private readonly string customerId;
+    private readonly string email;
 
     public StripeService(
         IAuthService authService,
@@ -22,16 +25,27 @@ public class StripeService : IStripeService
         IGenericRepository<StripeCustomer> customerRepo,
         IHttpContextAccessor httpContextAccessor,
         Stripe.ProductService productService,
-        PriceService priceService)
+        PriceService priceService,
+        CardService cardService)
     {
-        _authService = authService;
-        _customerService = customerService;
-        _customerRepo = customerRepo;
-        _httpContextAccessor = httpContextAccessor;
-        _productService = productService;
-        var claims = _httpContextAccessor.HttpContext.User.Claims.ToList();
-        userId = claims.FirstOrDefault(x=> x.Type == "Id").Value;
-        _priceService = priceService;
+        _authService = authService ?? throw new ArgumentNullException(nameof(authService));
+        _customerService = customerService ?? throw new ArgumentNullException(nameof(customerService));
+        _customerRepo = customerRepo ?? throw new ArgumentNullException(nameof(customerRepo));
+        _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+        _productService = productService ?? throw new ArgumentNullException(nameof(productService));
+        _priceService = priceService ?? throw new ArgumentNullException(nameof(priceService));
+        _cardService = cardService ?? throw new ArgumentNullException(nameof(cardService));
+
+        var httpContext = _httpContextAccessor.HttpContext;
+        if (httpContext?.User == null)
+        {
+            throw new InvalidOperationException("HttpContext or User is null.");
+        }
+
+        var claims = httpContext.User.Claims.ToDictionary(c => c.Type, c => c.Value);
+        userId = claims.TryGetValue("Id", out var id) ? id : throw new KeyNotFoundException("Id claim is missing.");
+        customerId = claims.TryGetValue("customerId", out var custId) ? custId : throw new KeyNotFoundException("CustomerId claim is missing.");
+        email = claims.TryGetValue("Email", out var emailClaim) ? emailClaim : throw new KeyNotFoundException("Email claim is missing.");
     }
 
     public async Task<string> CreateCustomer(string name, string email)
@@ -57,7 +71,6 @@ public class StripeService : IStripeService
                     Country = "India"
                 }
             };
-
             var result = await _customerService.CreateAsync(customerCreateOptions);
             var customer = new StripeCustomer
             {
@@ -71,7 +84,6 @@ public class StripeService : IStripeService
 
             _customerRepo.Insert(customer);
             _customerRepo.Save();
-
             return result.Id;
         }
         catch (Exception ex)
@@ -88,16 +100,99 @@ public class StripeService : IStripeService
             {
                 Name = ConstantVarriable.ProductName,
             });
-
             var price = await _priceService.CreateAsync(new PriceCreateOptions
             {
-                UnitAmount = (long)(amount * 100), 
+                UnitAmount = (long)(amount * 100),
                 Currency = "inr",
                 Product = product.Id
             });
-
             return price.Id;
         }
         catch (Exception) { throw; }
+    }
+
+    public async Task<string> CreateCheckout(long amount, string customerId, string email, string cardId)
+    {
+        try
+        {
+            var request = new PaymentIntentCreateOptions
+            {
+                Amount = amount,
+                Currency = ConstantVarriable.Currency,
+                Customer = customerId,
+                Description = ConstantVarriable.Description,
+                ReceiptEmail = email,
+                PaymentMethod = cardId,
+                Confirm = true,
+            };
+            var payment = await new PaymentIntentService().CreateAsync(request);
+            return await ConfirmPaymentIntentAsync(payment, cardId);
+        }
+        catch (Exception) { throw; }
+    }
+
+    public async Task<object> CreateCard(CardRequestModel model)
+    {
+        try
+        {
+            var cardCreateOptions = new CardCreateOptions
+            {
+                Source = new CardCreateNestedOptions
+                {
+                    Cvc = model.Cvc,
+                    ExpMonth = model.Exp_month,
+                    ExpYear = model.Exp_Year,
+                    Name = model.Name,
+                    Number = model.Number
+                }
+            };
+            return await _cardService.CreateAsync(customerId, cardCreateOptions);
+        }
+        catch (Exception) { throw; }
+    }
+
+    public async Task<object> DeleteCard(string id)
+    {
+        try
+        {
+            return await _cardService.DeleteAsync(customerId, id);
+        }
+        catch (Exception) { throw; }
+    }
+
+    private async Task<string> ConfirmPaymentIntentAsync(PaymentIntent paymentIntent, string paymentMethodId)
+    {
+        if (paymentIntent.Status == "requires_action" && paymentIntent.NextAction.Type == "use_stripe_sdk")
+        {
+            string callbackUrl = GetPaymentCallbackUrl();
+            var confirmOptions = new PaymentIntentConfirmOptions
+            {
+                PaymentMethod = paymentMethodId,
+                ReturnUrl = callbackUrl
+            };
+            var paymentIntentService = new PaymentIntentService();
+            var confirmation = await paymentIntentService.ConfirmAsync(paymentIntent.Id, confirmOptions);
+            return confirmation.NextAction.RedirectToUrl.Url;
+        }
+        else
+        {
+            var confirmOptions = new PaymentIntentConfirmOptions
+            {
+                PaymentMethod = paymentMethodId
+            };
+            var paymentIntentService = new PaymentIntentService();
+            await paymentIntentService.ConfirmAsync(paymentIntent.Id, confirmOptions);
+            return string.Empty;
+        }
+    }
+
+    private string GetPaymentCallbackUrl()
+    {
+        //string localHost = _hostUrlSetting.AngularLocal;
+        //if (_webHostEnvironment.IsProduction())
+        //{
+        //    localHost = _hostUrlSetting.Production;
+        //}
+        return $"{"kjashd"}/payment/message";
     }
 }

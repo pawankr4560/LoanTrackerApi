@@ -19,6 +19,7 @@ namespace WebApp.Server.Controllers
         {
             _authService = authService;
         }
+
         [HttpPost("Signup")]
         public async Task<IActionResult> Signup(SignUpRequestModel model)
         {

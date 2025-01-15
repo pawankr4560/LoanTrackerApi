@@ -9,7 +9,6 @@ using Newtonsoft.Json;
 using WebApp.Data;
 using WebApp.Data.Entity;
 using WebApp.Model.Auth;
-using AutoMapper.Configuration;
 
 namespace WebApp.Service.Auth
 {
@@ -88,6 +87,7 @@ namespace WebApp.Service.Auth
         public async Task<string> CreateToken(User user)
         {
             var roles = await _userManager.GetRolesAsync(user);
+            var customer = await _dbContext.StripeCustomer.Where(x => x.UserId == user.Id).FirstOrDefaultAsync();
             var claims = new List<Claim>
             {
                new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
@@ -95,6 +95,7 @@ namespace WebApp.Service.Auth
                new Claim("Id", user.Id),
                new Claim("FirstName", user.FirstName ?? string.Empty),
                new Claim("LastName", user.LastName ?? string.Empty),
+               new Claim("customerId", customer.CustomerId ?? string.Empty),
             };
 
             foreach (var role in roles)
