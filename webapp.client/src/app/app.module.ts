@@ -24,6 +24,7 @@ import { OrderdetailsComponent } from './components/orderdetails/orderdetails.co
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { AboutComponent } from './components/about/about.component';
 import { ContactComponent } from './components/contact/contact.component';
+import { CardComponent } from './components/card/card.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { ContactComponent } from './components/contact/contact.component';
     SidebarComponent,
     AboutComponent,
     ContactComponent,
+    CardComponent,
   ],
   imports: [
     BrowserModule,

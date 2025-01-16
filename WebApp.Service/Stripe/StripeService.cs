@@ -14,7 +14,7 @@ public class StripeService : IStripeService
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly Stripe.ProductService _productService;
     private readonly PriceService _priceService;
-    private readonly CardService _cardService;
+    private readonly Stripe.CardService _cardService;
     private readonly string userId;
     private readonly string customerId;
     private readonly string email;
@@ -26,7 +26,7 @@ public class StripeService : IStripeService
         IHttpContextAccessor httpContextAccessor,
         Stripe.ProductService productService,
         PriceService priceService,
-        CardService cardService)
+        Stripe.CardService cardService)
     {
         _authService = authService ?? throw new ArgumentNullException(nameof(authService));
         _customerService = customerService ?? throw new ArgumentNullException(nameof(customerService));
@@ -44,7 +44,7 @@ public class StripeService : IStripeService
 
         var claims = httpContext.User.Claims.ToDictionary(c => c.Type, c => c.Value);
         userId = claims.TryGetValue("Id", out var id) ? id : throw new KeyNotFoundException("Id claim is missing.");
-        customerId = claims.TryGetValue("customerId", out var custId) ? custId : throw new KeyNotFoundException("CustomerId claim is missing.");
+        customerId = claims.TryGetValue("CustomerId", out var custId) ? custId : throw new KeyNotFoundException("CustomerId claim is missing.");
         email = claims.TryGetValue("Email", out var emailClaim) ? emailClaim : throw new KeyNotFoundException("Email claim is missing.");
     }
 
@@ -131,20 +131,13 @@ public class StripeService : IStripeService
         catch (Exception) { throw; }
     }
 
-    public async Task<object> CreateCard(CardRequestModel model)
+    public async Task<object> CreateCard()
     {
         try
         {
-            var cardCreateOptions = new CardCreateOptions
+            var cardCreateOptions = new Stripe.CardCreateOptions
             {
-                Source = new CardCreateNestedOptions
-                {
-                    Cvc = model.Cvc,
-                    ExpMonth = model.Exp_month,
-                    ExpYear = model.Exp_Year,
-                    Name = model.Name,
-                    Number = model.Number
-                }
+                Source = "tok_visa"
             };
             return await _cardService.CreateAsync(customerId, cardCreateOptions);
         }
@@ -156,6 +149,49 @@ public class StripeService : IStripeService
         try
         {
             return await _cardService.DeleteAsync(customerId, id);
+        }
+        catch (Exception) { throw; }
+    }
+
+    public async Task<object> GetCards()
+    {
+        try
+        {
+            var customer = await _customerService.GetAsync(customerId);
+            var defaultSourceId = customer.DefaultSourceId;
+            var cards = await _cardService.ListAsync(customerId);
+            var response = cards.Select(card => new CardResponseModel
+            {
+                ExpMonth = card.ExpMonth,
+                ExpYear = card.ExpYear,
+                Last4 = card.Last4,
+                IsDefault = card.Id == defaultSourceId, 
+                Id = card.Id,
+                CustomerId = card.CustomerId
+            }).ToList();
+
+            return response;
+        }
+        catch (Exception) { throw; }
+    }
+
+    public async Task<object> GetDefaultCard()
+    {
+        try
+        {
+            return await _customerService.GetAsync(customerId);
+        }
+        catch (Exception) { throw; }
+    }
+
+    public async Task<object> SetDefaultCard(string cardId)
+    {
+        try
+        {
+            return await _customerService.UpdateAsync(customerId, new CustomerUpdateOptions
+            {
+                DefaultSource = cardId
+            });
         }
         catch (Exception) { throw; }
     }

@@ -18,10 +18,8 @@ export class OrderdetailsComponent implements OnInit{
    this.orderService.getOrders().subscribe({
     next : (response)=>{
       this.orders = response.data;
-     console.log(this.orders);
     },
     error :(err)=>{
-      console.log(err);
     }
    })
  }

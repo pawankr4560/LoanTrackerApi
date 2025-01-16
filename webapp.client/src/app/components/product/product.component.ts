@@ -38,7 +38,6 @@ export class ProductComponent implements OnInit {
         this.products = response.data;
       },
       error: (err) => {
-        console.log(err);
       }
     })
 
@@ -134,7 +133,6 @@ export class ProductComponent implements OnInit {
     this.orders = storedOrders ? JSON.parse(storedOrders) : []; 
     this.orderService.createOrder(this.orders).subscribe({
       next : async (response)=>{
-        debugger;
        localStorage.clear();
        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Order created successfully.' });
        this.closeDialogue()
@@ -142,7 +140,6 @@ export class ProductComponent implements OnInit {
        this.router.navigate(['orders']);
       },
       error : (err)=>{
-        console.log(err);
       }
     })
   }

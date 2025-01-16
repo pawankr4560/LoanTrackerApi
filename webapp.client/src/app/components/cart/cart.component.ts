@@ -76,7 +76,6 @@ export class CartComponent implements OnInit {
        this.router.navigate(['orders']);
       },
       error : (err)=>{
-        console.log(err);
       }
     })
   }

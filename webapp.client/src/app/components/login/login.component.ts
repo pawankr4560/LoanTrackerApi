@@ -33,10 +33,8 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     if (this.loginForm.valid) {
-      
       this.authService.login(this.loginForm.value).subscribe({
         next: async (response) => {
-          console.log(response.data);
           const token = response.data;
           localStorage.setItem("jwt", token);
           const decodedToken: any = jwt_decode(token);
@@ -66,13 +64,11 @@ export class LoginComponent implements OnInit {
 
         error: (err) => {
           this.errorMsg = err.error.errorMessage;
-          console.log('Login failed:', err);
           this.messageService.add({ severity: 'error', summary: 'Success', detail: this.errorMsg });
         }
 
       });
     } else {
-      console.log('Form is invalid:', this.loginForm);
     }
     }
 
@@ -85,8 +81,7 @@ export class LoginComponent implements OnInit {
       this.googleService.authState.subscribe({
         next:(result) =>{
           this.loading = true;
-          const idToken = result.idToken
-         console.log(result);
+          const idToken = result.idToken;
          this.authService.verifyToken(idToken).subscribe({
           next:async (result)=>{
             localStorage.setItem("jwt", result.data);
@@ -115,12 +110,10 @@ export class LoginComponent implements OnInit {
                       
           },
           error:(err)=>{
-            console.log(err);
           }
          })
         },
         error:(err)=>{
-          console.error(err);
         }
       })
   }

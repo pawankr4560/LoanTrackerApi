@@ -143,7 +143,7 @@ namespace WebApp.Api
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseMiddleware<WebAppMiddleware>();
+            //app.UseMiddleware<WebAppMiddleware>();
             app.MapControllers();
             app.Run();
         }

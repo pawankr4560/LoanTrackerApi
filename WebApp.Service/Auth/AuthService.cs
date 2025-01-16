@@ -95,8 +95,12 @@ namespace WebApp.Service.Auth
                new Claim("Id", user.Id),
                new Claim("FirstName", user.FirstName ?? string.Empty),
                new Claim("LastName", user.LastName ?? string.Empty),
-               new Claim("customerId", customer.CustomerId ?? string.Empty),
             };
+
+            if(customer != null)
+            {
+                claims.Add(new Claim("CustomerId", customer.CustomerId));
+            }
 
             foreach (var role in roles)
             {
@@ -145,7 +149,7 @@ namespace WebApp.Service.Auth
                     issuer: _configuration["Jwt:Issuer"],
                     audience: _configuration["Jwt:Audience"],
                     claims: claims,
-                    expires: DateTime.UtcNow.AddHours(1),
+                    expires: DateTime.UtcNow.AddHours(10),
                     signingCredentials: creds
                 );
 

@@ -22,12 +22,10 @@ this.userService.getUsers().subscribe({
 next : (res) => {
   this.data = res;
   this.users = this.data.data;
-  console.log(this.users);
   this.cdr.detectChanges(); 
 },
 
 error : (err) => {
-  console.log(err);
 }
 })
 

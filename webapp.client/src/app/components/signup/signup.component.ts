@@ -43,7 +43,6 @@ export class SignupComponent implements OnInit{
     if (this.signupForm.valid) {
       this.authService.signup(this.signupForm.value).subscribe({
         next: async (response) => {
-          console.log(response);
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'User registered successfully.'});
             //Delay navigation by 1 second (1000ms)
             await new Promise<void>(resolve => setTimeout(resolve, 2000));
@@ -51,35 +50,31 @@ export class SignupComponent implements OnInit{
 
         },
         error: (err) => {
-          console.log(err);
           this.messageService.add({ severity: 'error', summary: 'Success', detail: 'err.message' });
         }
       });
     }
 
     else {
-      console.log('Form is invalid:', this.signupForm);
+
     }
   }
 
   getAddress(address: any)
   {
-  console.log(address);
-  
    this.authService.getAddressSuggestions(address.value).subscribe({
     next: async (response) => {
    
       if (response && response.data && Array.isArray(response.data.predictions)) {
         this.addressData = response.data; // Assign data to addressData
         this.suggestions = this.addressData.predictions.map((prediction: { description: any; }) => prediction.description); // Extract descriptions only
-        console.log('Descriptions:', this.suggestions); // Log descriptions to verify
+    
       } else {
         console.error('Predictions data not found in the response');
         this.suggestions = []; // Clear suggestions if no predictions are found
       }
     },
     error: (err) => {
-      console.log(err);
       this.messageService.add({ severity: 'error', summary: 'Success', detail: 'err.message' });
     }
    })

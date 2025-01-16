@@ -13,6 +13,7 @@ import { OrderdetailsComponent } from 'src/app/components/orderdetails/orderdeta
 import { SidebarComponent } from 'src/app/components/sidebar/sidebar.component';
 import { AboutComponent } from 'src/app/components/about/about.component';
 import { ContactComponent } from 'src/app/components/contact/contact.component';
+import { CardComponent } from 'src/app/components/card/card.component';
 @NgModule({
   declarations: [],
   imports: [
@@ -29,6 +30,7 @@ import { ContactComponent } from 'src/app/components/contact/contact.component';
       {path:'home',component:ProductComponent},
       {path:'about',component:AboutComponent},
       {path:'contact',component:ContactComponent},
+      {path:'card',component:CardComponent},
       { 
         path: 'admin', 
         component: AdmindashboardComponent, 
