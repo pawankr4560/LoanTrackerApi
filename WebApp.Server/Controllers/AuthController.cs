@@ -40,7 +40,7 @@ namespace WebApp.Server.Controllers
             try
             {
                 var result = await _authService.Login(model);
-                return Ok(new ApiResponse(true, "Login Successfull", result));
+                return Ok(new ApiResponse(true, "Login Successfully", result));
             }
             catch (Exception ex)
             {

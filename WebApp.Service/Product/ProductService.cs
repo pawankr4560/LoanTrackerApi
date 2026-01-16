@@ -17,11 +17,11 @@ namespace WebApp.Service.Product
             _mapper = mapper;
         }
 
-        public IEnumerable<Data.Entity.Product> ProductList()
+        public async Task<IEnumerable<Data.Entity.Product>> ProductList()
         {
             try
             {
-                return  _dbContext.Products.AsEnumerable();
+                return await _dbContext.Products.Where(x=>!x.IsDeleted).ToListAsync();
             }
             catch (Exception) { throw; }
         }
@@ -55,7 +55,7 @@ namespace WebApp.Service.Product
             catch (Exception) { throw; }
         }
 
-        public async Task<bool> Update(UpdateProductModel model)
+        public async Task<Data.Entity.Product> Update(UpdateProductModel model)
         {
             try
             {
@@ -63,7 +63,7 @@ namespace WebApp.Service.Product
                 data.Id = Guid.Parse(model.Id);
                 _dbContext.Products.Update(data);
                 await _dbContext.SaveChangesAsync();
-                return true;
+                return data;
             }
             catch (Exception) { throw; }
         }
@@ -75,7 +75,8 @@ namespace WebApp.Service.Product
                 var data = await _dbContext.Products.Where(x => x.Id == id).FirstOrDefaultAsync();
                 if (data == null)
                     throw new Exception("No data found.");
-                _dbContext.Products.Remove(data);
+                data.IsDeleted = true;
+                _dbContext.Products.Update(data);
                 await _dbContext.SaveChangesAsync();
                 return true;
             }

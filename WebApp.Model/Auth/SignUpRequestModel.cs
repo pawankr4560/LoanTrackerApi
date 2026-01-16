@@ -26,6 +26,15 @@ namespace WebApp.Model.Auth
         public long Phone { get; set; }
 
         [Required]
+        public string Gender { get; set; } = string.Empty;
+
+        [Required]
         public string Address { get; set; } = string.Empty;
+        [Required]
+        public int Weight { get; set; } 
+        [Required]
+        public int Height { get; set; } 
+        [Required]
+        public double Calorie { get; set; } 
     }
 }

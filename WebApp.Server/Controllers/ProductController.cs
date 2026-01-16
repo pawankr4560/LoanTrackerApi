@@ -17,11 +17,11 @@ namespace WebApp.Server.Controllers
         }
 
         [HttpGet("ProductList")]
-        public  IActionResult GetProduct()
+        public  async Task<IActionResult> GetProduct()
         {
             try
             {
-                var result =  _productService.ProductList();
+                var result = await _productService.ProductList();
                 return Ok(new ApiResponse(true, null, result));
             }
             catch (Exception ex)

@@ -93,6 +93,7 @@ namespace WebApp.Service.Auth
                new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
                new Claim("Email", user.Email),
                new Claim("Id", user.Id),
+               new Claim("Phone", user.Phone.ToString()??string.Empty),
                new Claim("FirstName", user.FirstName ?? string.Empty),
                new Claim("LastName", user.LastName ?? string.Empty),
             };
@@ -169,5 +170,6 @@ namespace WebApp.Service.Auth
             }
             catch (Exception) { throw; }
         }
+
     }
 }
