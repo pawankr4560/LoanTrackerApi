@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApp.Data;
 
@@ -11,9 +12,10 @@ using WebApp.Data;
 namespace WebApp.Data.Migrations
 {
     [DbContext(typeof(WebAppDbContext))]
-    partial class WebAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260119070308_menuitem_entity_added")]
+    partial class menuitem_entity_added
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -186,43 +188,32 @@ namespace WebApp.Data.Migrations
                     b.ToTable("Location");
                 });
 
-            modelBuilder.Entity("WebApp.Data.Entity.MenuItems", b =>
+            modelBuilder.Entity("WebApp.Data.Entity.MenuItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("F_menu_Index");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("IconClass")
+                    b.Property<string>("Icon")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("F_Icon_class");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit")
-                        .HasColumnName("F_Active");
+                    b.Property<int?>("MenuItemId")
+                        .HasColumnType("int");
 
-                    b.Property<int>("OrderNumber")
-                        .HasColumnType("int")
-                        .HasColumnName("F_order_number");
-
-                    b.Property<int?>("ParentId")
-                        .HasColumnType("int")
-                        .HasColumnName("F_Parent_menu_index");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Route")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("F_route");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("T_Title");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MenuItemId");
 
                     b.ToTable("MenuItem");
                 });
@@ -534,6 +525,13 @@ namespace WebApp.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("WebApp.Data.Entity.MenuItem", b =>
+                {
+                    b.HasOne("WebApp.Data.Entity.MenuItem", null)
+                        .WithMany("Children")
+                        .HasForeignKey("MenuItemId");
+                });
+
             modelBuilder.Entity("WebApp.Data.Entity.StripeCustomer", b =>
                 {
                     b.HasOne("WebApp.Data.Entity.User", "User")
@@ -543,6 +541,11 @@ namespace WebApp.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("WebApp.Data.Entity.MenuItem", b =>
+                {
+                    b.Navigation("Children");
                 });
 #pragma warning restore 612, 618
         }

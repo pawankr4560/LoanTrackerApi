@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApp.Data;
 
@@ -11,9 +12,10 @@ using WebApp.Data;
 namespace WebApp.Data.Migrations
 {
     [DbContext(typeof(WebAppDbContext))]
-    partial class WebAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260119074652_menuitem_entity_updated")]
+    partial class menuitem_entity_updated
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -186,7 +188,7 @@ namespace WebApp.Data.Migrations
                     b.ToTable("Location");
                 });
 
-            modelBuilder.Entity("WebApp.Data.Entity.MenuItems", b =>
+            modelBuilder.Entity("WebApp.Data.Entity.MenuItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -223,6 +225,8 @@ namespace WebApp.Data.Migrations
                         .HasColumnName("T_Title");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
 
                     b.ToTable("MenuItem");
                 });
@@ -534,6 +538,15 @@ namespace WebApp.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("WebApp.Data.Entity.MenuItem", b =>
+                {
+                    b.HasOne("WebApp.Data.Entity.MenuItem", "Parent")
+                        .WithMany("Children")
+                        .HasForeignKey("ParentId");
+
+                    b.Navigation("Parent");
+                });
+
             modelBuilder.Entity("WebApp.Data.Entity.StripeCustomer", b =>
                 {
                     b.HasOne("WebApp.Data.Entity.User", "User")
@@ -543,6 +556,11 @@ namespace WebApp.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("WebApp.Data.Entity.MenuItem", b =>
+                {
+                    b.Navigation("Children");
                 });
 #pragma warning restore 612, 618
         }
