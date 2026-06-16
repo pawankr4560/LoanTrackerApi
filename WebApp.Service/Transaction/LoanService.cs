@@ -22,22 +22,11 @@ namespace WebApp.Service.Transaction
 
         public async Task<List<LoanDto>> LoanList()
         {
-            return await (
-       from loan in _dbContext.Loan
-       join user in _dbContext.Users
-           on loan.UserId.ToString() equals user.Id
-       where !loan.IsDeleted
-       select new LoanDto
-       {
-           LoanNumber = loan.LoanNumber,
-           UserId = loan.UserId,
-           Active = loan.Active,
-           LoanAmount = loan.LoanAmount,
-           Rate = loan.Rate,
-           Tenure = loan.Tenure,
-           UserName = user.FirstName + " " + user.LastName,
-       })
-       .ToListAsync();
+            var loans = await _dbContext.Loan
+                .Where(x => !x.IsDeleted)
+                .ToListAsync();
+
+            return _mapper.Map<List<LoanDto>>(loans);
         }
 
         #endregion
@@ -87,6 +76,7 @@ namespace WebApp.Service.Transaction
             loan.LoanAmount = model.LoanAmount;
             loan.Rate = model.Rate;
             loan.Active = model.Active;
+
             loan.F_Updated_Date_Time = DateTime.UtcNow;
 
             _dbContext.Loan.Update(loan);
