@@ -14,6 +14,7 @@ using WebApp.Data.SeedData;
 using WebApp.Service.Auth;
 using WebApp.Service.Middleware;
 using WebApp.Service.Product;
+using WebApp.Service.Transaction;
 
 namespace WebApp.Api
 {
@@ -73,6 +74,7 @@ namespace WebApp.Api
             builder.Services.AddTransient<IAuthService, AuthService>();
             builder.Services.AddTransient<IProductService, Service.Product.ProductService>();
             builder.Services.AddTransient<OrderService, OrderService>();
+            builder.Services.AddTransient<ILoanService, Service.Transaction.LoanService>();
             builder.Services.AddTransient<IStripeService, StripeService>();
           
             builder.Services.AddScoped<CustomerService>();

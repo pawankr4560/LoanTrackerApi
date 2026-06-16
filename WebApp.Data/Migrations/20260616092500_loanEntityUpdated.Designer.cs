@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApp.Data;
 
@@ -11,9 +12,10 @@ using WebApp.Data;
 namespace WebApp.Data.Migrations
 {
     [DbContext(typeof(WebAppDbContext))]
-    partial class WebAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260616092500_loanEntityUpdated")]
+    partial class loanEntityUpdated
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -167,10 +169,6 @@ namespace WebApp.Data.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
-                    b.Property<double>("EMI")
-                        .HasColumnType("float")
-                        .HasColumnName("F_Installment");
-
                     b.Property<DateTime>("F_Created_Date_Time")
                         .HasColumnType("datetime2");
 
@@ -198,10 +196,6 @@ namespace WebApp.Data.Migrations
                     b.Property<double>("Rate")
                         .HasColumnType("float")
                         .HasColumnName("F_Rate");
-
-                    b.Property<float>("Tenure")
-                        .HasColumnType("real")
-                        .HasColumnName("F_Tenure");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int")

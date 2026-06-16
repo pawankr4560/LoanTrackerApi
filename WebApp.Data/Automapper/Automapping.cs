@@ -3,6 +3,7 @@ using WebApp.Data.Entity;
 using WebApp.Model.Auth;
 using WebApp.Model.Order;
 using WebApp.Model.Product;
+using WebApp.Model.Transaction;
 
 namespace WebApp.Data.Automapper
 {
@@ -13,6 +14,8 @@ namespace WebApp.Data.Automapper
             CreateMap<SignUpRequestModel, User>();
             CreateMap<CreateProductRequestModel, Product>();
             CreateMap<UpdateProductModel, Product>();
+            CreateMap<LoanRequestModel, Loan>();
+            CreateMap<Loan, LoanDto>();
             CreateMap<CreateOrderRequestModel, OrderHistory>()
            .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.Id)).ForMember(dest => dest.Id, opt=> opt.MapFrom(src => Guid.NewGuid()));
         }
