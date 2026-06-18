@@ -10,7 +10,7 @@ namespace WebApp.Data.Entity
         public int Id { get; set; }
 
         [Column("F_User_Index")]
-        public int UserId { get; set; }
+        public string UserId { get; set; } = string.Empty;
 
         [Column("F_Loan_Number")]
         public string LoanNumber { get; set; }

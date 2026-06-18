@@ -6,6 +6,7 @@ namespace WebApp.Service.Transaction
     {
         Task<bool> AddLoan(LoanRequestModel model);
         Task<bool> DeleteLoan(int id);
+        Task<CreateLoanDTO> GetLoanNumber();
         Task<LoanDto?> GetLoanById(int id);
         Task<List<LoanDto>> LoanList();
         Task<bool> UpdateLoan(LoanRequestModel model);

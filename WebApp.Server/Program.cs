@@ -12,6 +12,7 @@ using WebApp.Data.Entity;
 using WebApp.Data.Repository;
 using WebApp.Data.SeedData;
 using WebApp.Service.Auth;
+using WebApp.Service.Message;
 using WebApp.Service.Middleware;
 using WebApp.Service.Product;
 using WebApp.Service.Transaction;
@@ -49,7 +50,17 @@ namespace WebApp.Api
             {
                 options.UseSqlServer(configuration.GetConnectionString("Default"));
             });
+            // Register MSG91 named HttpClient configuration
+            builder.Services.AddHttpClient("MSG91Client", client =>
+            {
+                var msg91Config = builder.Configuration.GetSection("MSG91");
+                client.BaseAddress = new Uri(msg91Config["BaseUrl"]);
+                client.DefaultRequestHeaders.Add("authkey", msg91Config["AuthKey"]);
+                client.DefaultRequestHeaders.Add("accept", "application/json");
+            });
 
+            // Register the custom service
+            builder.Services.AddScoped<IMessageService, MessageService>();
             builder.Services.AddIdentity<User, IdentityRole>(
                 option =>
                 {
