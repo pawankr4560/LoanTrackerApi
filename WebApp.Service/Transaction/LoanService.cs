@@ -54,7 +54,7 @@ namespace WebApp.Service.Transaction
         public async Task<LoanDto?> GetLoanById(int id)
         {
             var loan = await _dbContext.Loan
-                .FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             return loan == null
                 ? null
