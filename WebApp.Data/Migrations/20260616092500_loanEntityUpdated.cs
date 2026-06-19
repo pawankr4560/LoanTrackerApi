@@ -24,7 +24,6 @@ namespace WebApp.Data.Migrations
                     F_Created_Date_Time = table.Column<DateTime>(type: "datetime2", nullable: false),
                     F_Updated_Date_Time = table.Column<DateTime>(type: "datetime2", nullable: false),
                     F_User_Index_Created = table.Column<int>(type: "int", nullable: false),
-                    F_User_Index_Update = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {

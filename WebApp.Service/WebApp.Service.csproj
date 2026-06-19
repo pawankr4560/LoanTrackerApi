@@ -37,4 +37,8 @@
 		<ProjectReference Include="..\WebApp.Model\WebApp.Model.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="NewFolder\" />
+	</ItemGroup>
+
 </Project>
