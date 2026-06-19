@@ -38,6 +38,14 @@ namespace WebApp.Server.Controllers
 
             return Ok(result);
         }
+        [HttpGet("loan-number/{loanNumber}")]
+        public async Task<IActionResult> GetScheduleByLoanNumber(string loanNumber)
+        {
+            var result = await _loanEMIScheduleService
+                .GetScheduleByLoanNumberAsync(loanNumber);
+
+            return Ok(result);
+        }
 
         [HttpPost]
         public async Task<IActionResult> Create(

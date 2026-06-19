@@ -6,6 +6,7 @@ namespace WebApp.Service.Transaction
     {
         Task<LoanEMIScheduleDto> AddAsync(LoanEMIScheduleDto model);
         Task<bool> DeleteAsync(int id);
+        Task<List<LoanEMIScheduleDto>> GetScheduleByLoanNumberAsync(string loanNumber);
         Task<List<LoanInstallmentDto>> GetUnpaidInstallmentsByLoanNumber(string loanNumber);
         Task<List<LoanEMIScheduleDto>> GetAllAsync();
         Task<LoanEMIScheduleDto?> GetByIdAsync(int id);

@@ -121,7 +121,29 @@ namespace WebApp.Service.Transaction
                     else
                         await GenerateEMIScheduleAsync(entity);
                 }
+                var customerDetail = new LoanCustomerDetail
+                {
+                    LoanId = entity.Id,
 
+                    CustomerAadhaarNo = model.CustomerDetail.CustomerAadhaarNo,
+                    CustomerMobileNo = model.CustomerDetail.CustomerMobileNo,
+                    CustomerAddress = model.CustomerDetail.CustomerAddress,
+                    CustomerCity = model.CustomerDetail.CustomerCity,
+                    CustomerState = model.CustomerDetail.CustomerState,
+                    CustomerPinCode = model.CustomerDetail.CustomerPinCode,
+
+                    GuarantorName = model.CustomerDetail.GuarantorName,
+                    GuarantorAadhaarNo = model.CustomerDetail.GuarantorAadhaarNo,
+                    GuarantorMobileNo = model.CustomerDetail.GuarantorMobileNo,
+                    GuarantorAddress = model.CustomerDetail.GuarantorAddress,
+                    GuarantorRelationship = model.CustomerDetail.GuarantorRelationship,
+
+                    IsDeleted = false,
+                    F_Created_Date_Time = DateTime.UtcNow
+                };
+
+                await _dbContext.LoanCustomerDetail.AddAsync(customerDetail);
+                await _dbContext.SaveChangesAsync();
                 return isSavedSuccessfully;
             }
             catch (Exception ex)

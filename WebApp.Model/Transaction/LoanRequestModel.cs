@@ -23,5 +23,6 @@
         public string Status { get; set; } = "Pending";
 
         public bool Active { get; set; }
+        public LoanCustomerDetailRequestModel CustomerDetail { get; set; } = new();
     }
 }

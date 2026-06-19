@@ -23,6 +23,7 @@ namespace WebApp.Data
         public DbSet<LoanPayment> LoanPayment { get; set; }
         public DbSet<LoanEMISchedule> LoanEMISchedule { get; set; }
         public DbSet<Loan> Loan { get; set; }
+        public DbSet<LoanCustomerDetail> LoanCustomerDetail { get; set; }
         public DbSet<LoanSetting> LoanSetting { get; set; }
         public DbSet<UnitOfMeasure> UnitOfMeasure { get; set; }
         public DbSet<OrderHistory> OrderHistory { get; set; }

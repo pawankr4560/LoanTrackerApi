@@ -40,7 +40,33 @@ namespace WebApp.Service.Transaction
                 ? null
                 : _mapper.Map<LoanEMIScheduleDto>(schedule);
         }
+        public async Task<List<LoanEMIScheduleDto>> GetScheduleByLoanNumberAsync(string loanNumber)
+        {
+            var schedules = await (
+                from loan in _dbContext.Loan
+                join schedule in _dbContext.LoanEMISchedule
+                    on loan.Id equals schedule.LoanId
+                where loan.LoanNumber == loanNumber
+                      && !loan.IsDeleted
+                      && !schedule.IsDeleted
+                orderby schedule.InstallmentNo
+                select new LoanEMIScheduleDto
+                {
+                    Id = schedule.Id,
+                    LoanId = schedule.LoanId,
+                    InstallmentNo = schedule.InstallmentNo,
+                    DueDate = schedule.DueDate,
+                    EMIAmount = schedule.EMIAmount,
+                    PrincipalAmount = schedule.PrincipalAmount,
+                    InterestAmount = schedule.InterestAmount,
+                    OutstandingBalance = schedule.OutstandingBalance,
+                    IsPaid = schedule.IsPaid,
+                    PaidDate = schedule.PaidDate
+                }
+            ).ToListAsync();
 
+            return schedules;
+        }
         public async Task<List<LoanEMIScheduleDto>> GetByLoanIdAsync(int loanId)
         {
             var schedules = await _dbContext.LoanEMISchedule
