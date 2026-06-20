@@ -318,15 +318,14 @@ namespace WebApp.Service.Transaction
             decimal totalInterest = loanAmount * annualRate * tenureMonths / 12 / 100;
             decimal monthlyInterest = totalInterest / tenureMonths;
             decimal monthlyPrincipal = loanAmount / tenureMonths;
-            decimal emiAmount = monthlyPrincipal + monthlyInterest;
 
             decimal outstandingBalance = loanAmount;
-            DateTime dueDate = loan.StartDate;
 
             for (int installmentNo = 1; installmentNo <= tenureMonths; installmentNo++)
             {
                 decimal principalAmount = monthlyPrincipal;
                 decimal interestAmount = monthlyInterest;
+                decimal emiAmount = principalAmount + interestAmount;
 
                 if (installmentNo == tenureMonths)
                 {
@@ -340,7 +339,9 @@ namespace WebApp.Service.Transaction
                 {
                     LoanId = loan.Id,
                     InstallmentNo = installmentNo,
-                    DueDate = dueDate,
+
+                    // First EMI after 1 month from StartDate
+                    DueDate = loan.StartDate.AddMonths(installmentNo),
 
                     EMIAmount = Math.Round(emiAmount, 2),
                     PrincipalAmount = Math.Round(principalAmount, 2),
@@ -353,8 +354,6 @@ namespace WebApp.Service.Transaction
                     F_Created_Date_Time = DateTime.UtcNow,
                     F_Updated_Date_Time = DateTime.UtcNow
                 });
-
-                dueDate = dueDate.AddMonths(1);
             }
 
             await _dbContext.LoanEMISchedule.AddRangeAsync(schedules);

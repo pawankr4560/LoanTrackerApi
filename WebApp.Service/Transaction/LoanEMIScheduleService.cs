@@ -46,6 +46,8 @@ namespace WebApp.Service.Transaction
                 from loan in _dbContext.Loan
                 join schedule in _dbContext.LoanEMISchedule
                     on loan.Id equals schedule.LoanId
+                join add in _dbContext.LoanCustomerDetail
+                on loan.Id equals add.LoanId
                 where loan.LoanNumber == loanNumber
                       && !loan.IsDeleted
                       && !schedule.IsDeleted
@@ -61,6 +63,10 @@ namespace WebApp.Service.Transaction
                     InterestAmount = schedule.InterestAmount,
                     OutstandingBalance = schedule.OutstandingBalance,
                     IsPaid = schedule.IsPaid,
+                    CustMobNo = add.CustomerMobileNo,
+                    GranterMobNo= add.CustomerMobileNo,
+                    GranterName=add.GuarantorName,
+                    Relation=add.GuarantorRelationship,
                     PaidDate = schedule.PaidDate
                 }
             ).ToListAsync();
